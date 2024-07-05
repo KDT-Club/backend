@@ -15,9 +15,10 @@ public class ClubMemberService {
     private final MemberRepository memberRepository;
     private final ClubMemberRepository clubMemberRepository;
 
-    public List<ClubMemberDTO> findAll() {
-        List<ClubMember> clubMemberList = clubMemberRepository.findAll();
-        //ClubMember -> ClubMemberDTO로 변환
+    // 동아리 id로 동아리 회원 전체 검색
+    public List<ClubMemberDTO> findAllByClubId(Long clubId) {
+        List<ClubMember> clubMemberList = clubMemberRepository.findByClubId(clubId);
+        // ClubMember -> ClubMemberDTO로 변환
         List<ClubMemberDTO> clubMemberDTOList = new ArrayList<>();
         for (ClubMember clubMember : clubMemberList){
             clubMemberDTOList.add(ClubMemberDTO.toClubMemberDTO(clubMember));
@@ -25,26 +26,16 @@ public class ClubMemberService {
         return clubMemberDTOList;
     }
 
-//    @Transactional
-//    public List<ClubMember> makeDummyClubMemberData(int count) {
-//        List<ClubMember> clubMemberList = new ArrayList<>();
-//        Club club = clubRepository.findById(31L).orElseThrow();
-//
-//        for (int i = 1; i <= count; i++) {
-//            Long memberId = (long) i;
-//            ClubMemberId clubMemberId = new ClubMemberId(31L, memberId);
-//
-//            if (clubMemberRepository.existsById(clubMemberId)) {
-//                continue; // Skip if the club member already exists
-//            }
-//
-//            ClubMember clubMember = new ClubMember();
-//            clubMember.setClub(club);
-//            clubMember.setMember(memberRepository.findById(memberId).orElseThrow());
-//            clubMember.setId(clubMemberId);
-//            clubMemberList.add(clubMember);
-//        }
-//
-//        return clubMemberRepository.saveAll(clubMemberList);
-//    }
+    // 멤버 id로 멤버 검색
+    public ClubMemberDTO findById(Long memberId, Long clubId) {
+        ClubMember clubMember = clubMemberRepository.findById(new ClubMemberId(memberId, clubId)).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
+        return ClubMemberDTO.toClubMemberDTO(clubMember);
+    }
+
+    // 회원 상태 수정
+    public void changeStatus(Long memberId, Long clubId, MemberStatus status) {
+        ClubMember clubMember = clubMemberRepository.findById(new ClubMemberId(memberId, clubId)).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
+        clubMember.getMember().setStatus(status);
+        memberRepository.save(clubMember.getMember());
+    }
 }

@@ -3,9 +3,7 @@ package com.ac.su.clubmember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,21 +13,32 @@ import java.util.List;
 public class ClubMemberController {
     private final ClubMemberService clubMemberService;
 
-    // 동아리 회원 리스트 출력
-    @GetMapping("/clubMembers")
-    public String findAll(Model model) {
-        List<ClubMemberDTO> clubMemberDTOList = clubMemberService.findAll();
+    // 동아리 id에 따른 동아리 회원 리스트 출력
+    @GetMapping("/{clubId}/clubMembers")
+    public String clubMemberList(@PathVariable("clubId") Long clubId,
+                                 Model model) {
+        List<ClubMemberDTO> clubMemberDTOList = clubMemberService.findAllByClubId(clubId);
         model.addAttribute("clubMemberList", clubMemberDTOList);
         return "club_member_list";
     }
 
-//    @GetMapping("/make-dummyClubMember")
-//    public ResponseEntity<List<ClubMember>> makeDummyClubData(@RequestParam("count") int count) {
-//        // count 값이 1 이상 100 이하가 되도록 제약조건 추가하기!
-//        if(count<1 || count>100) {
-//            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
-//        }
-//        List<ClubMember> clubMembers = clubMemberService.makeDummyClubMemberData(count);
-//        return new ResponseEntity<>(clubMembers, HttpStatus.OK);
-//    }
+    // 회원 상세 정보
+    @GetMapping("/{clubId}/clubMember/{memberId}")
+    public String memberDetail(@PathVariable("memberId") Long memberId,
+                               @PathVariable("clubId") Long clubId,
+                               Model model) {
+        ClubMemberDTO clubMemberDTO = clubMemberService.findById(memberId, clubId);
+        model.addAttribute("clubMember", clubMemberDTO);
+        return "club_member_detail";
+    }
+
+    // 회원 상태 수정
+    @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
+    public String changeStatus(@PathVariable("memberId") Long memberId,
+                               @PathVariable("clubId") Long clubId,
+                               @RequestParam("status") MemberStatus status) {
+        clubMemberService.changeStatus(memberId, clubId, status);
+        // 회원 상태 수정 후 회원 리스트로 리다이렉트
+        return "redirect:/clubs/" + clubId + "/clubMembers";
+    }
 }
