@@ -1,5 +1,13 @@
 package com.ac.su.community.club;
 
+import com.ac.su.member.Member;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -19,8 +27,8 @@ public class Club {
     @Column(length=20, nullable = false)
     private String category;
 
-    @Column
-    private Date createdAt;
+    @CreationTimestamp
+    private LocalDateTime createdAt; // 생성 날짜
 
     @Column
     private String clubImgUrl;

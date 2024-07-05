@@ -1,10 +1,18 @@
 package com.ac.su.notification;
 
+import com.ac.su.member.Member;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
 @ToString
-public class Notification
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-incremnet
     @Column(name="notification_id")
@@ -15,4 +23,5 @@ public class Notification
     @ManyToOne
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member; // 멤버 고유 번호
+
 }
