@@ -1,5 +1,12 @@
 package com.ac.su.joinrequest;
 
+import com.ac.su.clubmember.RequestStatus;
+import com.ac.su.community.club.Club;
+import com.ac.su.member.Member;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Getter
 @Setter

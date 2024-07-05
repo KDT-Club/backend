@@ -1,6 +1,11 @@
 package com.ac.su.member;
 
 
+import com.ac.su.clubmember.MemberStatus;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Getter
 @Setter

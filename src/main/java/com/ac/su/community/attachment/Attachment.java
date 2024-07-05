@@ -1,5 +1,14 @@
 package com.ac.su.community.attachment;
 
+import com.ac.su.community.post.Post;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
