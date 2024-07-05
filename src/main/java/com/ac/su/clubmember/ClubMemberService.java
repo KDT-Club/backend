@@ -38,4 +38,8 @@ public class ClubMemberService {
         clubMember.getMember().setStatus(status);
         memberRepository.save(clubMember.getMember());
     }
+
+    public void deleteMember(Long memberId, Long clubId) {
+        clubMemberRepository.deleteById(new ClubMemberId(memberId, clubId));
+    }
 }

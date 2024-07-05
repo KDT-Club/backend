@@ -14,7 +14,7 @@ public class ClubMemberController {
     private final ClubMemberService clubMemberService;
 
     // 동아리 id에 따른 동아리 회원 리스트 출력
-    @GetMapping("/{clubId}/clubMembers")
+    @GetMapping("/{clubId}/clubMember")
     public String clubMemberList(@PathVariable("clubId") Long clubId,
                                  Model model) {
         List<ClubMemberDTO> clubMemberDTOList = clubMemberService.findAllByClubId(clubId);
@@ -39,6 +39,15 @@ public class ClubMemberController {
                                @RequestParam("status") MemberStatus status) {
         clubMemberService.changeStatus(memberId, clubId, status);
         // 회원 상태 수정 후 회원 리스트로 리다이렉트
-        return "redirect:/clubs/" + clubId + "/clubMembers";
+        return "redirect:/clubs/" + clubId + "/clubMember";
+    }
+
+    // 회원 삭제
+    @PostMapping("/{clubId}/clubMember/{memberId}/deleteMember")
+    public String deleteMember(@PathVariable("memberId") Long memberId,
+                               @PathVariable("clubId") Long clubId) {
+        clubMemberService.deleteMember(memberId, clubId);
+        // 회원 삭제 후 회원 리스트로 리다이렉트
+        return "redirect:/clubs/" + clubId + "/clubMember";
     }
 }
