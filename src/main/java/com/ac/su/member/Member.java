@@ -23,7 +23,7 @@ public class Member {
     private String department;
 
     @Column(unique = true, nullable = false)
-    private int studentId;
+    private String studentId;
 
     @Column(length = 20, nullable = false)
     private String password;
