@@ -40,17 +40,16 @@ public class LoginController {
     //로그인 페이지로 이동
     @GetMapping("/login")
     String login() {
-        var a = memberRepository.findByStudentId("2020101460");
-        System.out.println(a.get());
-        var hashed_password = passwordEncoder.encode("1234");
-        System.out.println(hashed_password);
+//        var a = memberRepository.findByStudentId("2020101460");
+//        System.out.println(a.get());
+//        var hashed_password = passwordEncoder.encode("1234");
+//        System.out.println(hashed_password);
         return "login";
     }
     @GetMapping("/mainPage")
     String mainpage(Authentication auth) {
         System.out.println(auth.getPrincipal());
         System.out.println(auth.getName());
-
         return "mainpage";
     }
 
