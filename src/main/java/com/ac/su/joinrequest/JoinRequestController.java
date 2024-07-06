@@ -24,12 +24,11 @@ public class JoinRequestController {
 
     private final ClubRepository clubRepository;
     private final JoinRequestRepository joinRequestRepository;
-    @PostMapping("/clubs/{clubName}/applicationsaaaaa")
+    @PostMapping("/clubs/{clubName}/applications")
     public ResponseEntity<?> applyToClub(@PathVariable String clubName,
                                          @RequestBody ApplicationRequest request,
                                          Authentication auth) {
         if (auth == null || !auth.isAuthenticated()) {
-            System.out.println("aaaaaaaaaaaaaaaaa");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("가입 신청하려면 로그인 해야함");
         }
 
