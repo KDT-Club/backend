@@ -35,7 +35,7 @@ public class JoinRequestController {
 
         Optional<Club> clubOptional = clubRepository.findByName(clubName);
         if (clubOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("현재 그런 동아리 없음");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(clubName + "현재 그런 동아리 없음");
         }
 
         //JoinRequest컬럼에 club 필드를 위한 club 객체 생성
@@ -49,16 +49,14 @@ public class JoinRequestController {
 
         JoinRequest joinRequest = new JoinRequest();
         joinRequest.setIntroduction(request.getMotivation());
-        joinRequest.setStatus(RequestStatus.WAITING); // assuming a PENDING status exists
+        joinRequest.setStatus(RequestStatus.WAITING); // 지원 시에는 "지원상태"를 "WAITING"로 설정
         joinRequest.setMember(member);
         joinRequest.setClub(club);
 
-        joinRequestRepository.save(joinRequest); // JoinRequest 엔티티에 저장!
+        joinRequestRepository.save(joinRequest); // JoinRequest
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Application submitted successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("가입신청이 성공적으로 완료됨!!!");
     }
-
-    // Other existing endpoints
 
 }
 @Getter
@@ -66,7 +64,5 @@ public class JoinRequestController {
 class ApplicationRequest {
     private String clubName;
     private String motivation;
-
-    // Getters and setters
 }
 
