@@ -25,7 +25,7 @@ public class JoinRequestController {
     private final ClubRepository clubRepository;
     private final JoinRequestRepository joinRequestRepository;
 
-    @PostMapping("/clubs/{clubName}/applications")
+    @PostMapping("/clubs/{clubName}/applicationsaaaaa")
     public ResponseEntity<?> applyToClub(@PathVariable String clubName,
                                          @RequestBody ApplicationRequest request,
                                          Authentication auth) {
