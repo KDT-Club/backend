@@ -24,10 +24,10 @@ public class SecurityConfig { //여기서 Spring Security 설정함
                 authorize.requestMatchers("/**").permitAll() ////모든 페이지 접속 허용
         );
         //폼태그로 로그인하겠다는 설정
-        http.formLogin((formLogin) -> formLogin.loginPage("/login") //폼으로 로그인, 로그인페이지 URL 적어주기
+        http.formLogin((formLogin) -> formLogin.loginPage("/login") //폼으로 로그인, 로그인페이지 URL 적어주기 GET
                         .usernameParameter("studentId")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/") //성공 시 이동 URL
+                        .defaultSuccessUrl("/mainPage") //성공 시 이동 URL GET
 //                .failureUrl("/fail") //실패 시 이동 URL //이거 없으면  기본적으로 /login?error 페이지로 이동
         );
         http.logout( logout -> logout.logoutUrl("/logout") );  //이 URL로 GET 요청하면 로그아웃 시켜줌
