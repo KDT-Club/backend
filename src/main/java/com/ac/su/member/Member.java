@@ -16,16 +16,16 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String department;
 
     @Column(unique = true, nullable = false)
     private String studentId;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
