@@ -57,4 +57,9 @@ public class JoinRequestService {
         clubMember.setId(new ClubMemberId(clubId, memberId));
         clubMemberRepository.save(clubMember);
     }
+
+    // 가입 거절
+    public void denyRequest(Long requestId) {
+        joinRequestRepository.deleteById(requestId);
+    }
 }

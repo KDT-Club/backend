@@ -43,4 +43,13 @@ public class JoinRequestController {
         // 가입 승인 후 동아리 지원서 리스트로 리다이렉트
         return "redirect:/clubs/" + clubId + "/joinRequest";
     }
+
+    // 가입 거절
+    @PostMapping("/{clubId}/joinRequest/{requestId}/denyRequest")
+    public String denyRequest(@PathVariable("requestId") Long requestId,
+                              @PathVariable("clubId") Long clubId) {
+        joinRequestService.denyRequest(requestId);
+        // 가입 거절 후 회원 리스트로 리다이렉트
+        return "redirect:/clubs/" + clubId + "/joinRequest";
+    }
 }
