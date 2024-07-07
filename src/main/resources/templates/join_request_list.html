@@ -18,6 +18,11 @@
         <td th:text="${joinRequest.name}"></td>
         <td th:text="${joinRequest.department}"></td>
         <td th:text="${joinRequest.studentId}"></td>
+        <td>
+            <a th:href="@{/clubs/{clubId}/joinRequest/{requestId}(requestId=${joinRequest.requestId})}">
+                <button>></button>
+            </a>
+        </td>
     </tr>
 </table>
 </body>

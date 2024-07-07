@@ -16,6 +16,11 @@
         <td th:text="${clubMember.memberImageurl}"></td>
         <td th:text="${clubMember.name}"></td>
         <td th:text="${clubMember.status}"></td>
+        <td>
+            <a th:href="@{/clubs/{clubId}/clubMember/{memberId}(clubId=${clubId}, memberId=${clubMember.memberId})}">
+                <button>></button>
+            </a>
+        </td>
     </tr>
 </table>
 </body>

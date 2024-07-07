@@ -21,7 +21,7 @@ public class JoinRequestService {
 
     // 동아리 id로 동아리 지원서 전체 검색
     public List<JoinRequestDTO> findRequestByClubId(Long clubId) {
-        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubId(clubId);
+        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubIdAndStatus(clubId, RequestStatus.WAITING);
         // 동아리 지원서가 한 개도 없을 때 빈 리스트 반환
         if(joinRequestList.isEmpty()){
             return new ArrayList<>();
@@ -34,7 +34,7 @@ public class JoinRequestService {
         return joinRequestDTOList;
     }
 
-    // 지원서 id로 동아리 지원서 검색 후 상세 정보
+    // 지원서 id로 동아리 지원서 검색 후 상세 정보 출력
     public JoinRequestDTO findByRequestId(Long requestId) {
         JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
         return JoinRequestDTO.toJoinRequestDTO(joinRequest);
