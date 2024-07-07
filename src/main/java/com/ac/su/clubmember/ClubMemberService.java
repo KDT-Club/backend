@@ -26,8 +26,8 @@ public class ClubMemberService {
         return clubMemberDTOList;
     }
 
-    // 멤버 id로 멤버 검색
-    public ClubMemberDTO findById(Long memberId, Long clubId) {
+    // 멤버 id로 멤버 검색 후 상세 정보 출력
+    public ClubMemberDTO findByMemberId(Long memberId, Long clubId) {
         ClubMember clubMember = clubMemberRepository.findById(new ClubMemberId(memberId, clubId)).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
         return ClubMemberDTO.toClubMemberDTO(clubMember);
     }
@@ -39,6 +39,7 @@ public class ClubMemberService {
         memberRepository.save(clubMember.getMember());
     }
 
+    // 회원 삭제
     public void deleteMember(Long memberId, Long clubId) {
         clubMemberRepository.deleteById(new ClubMemberId(memberId, clubId));
     }

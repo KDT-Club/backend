@@ -27,7 +27,7 @@ public class ClubMemberController {
     public String memberDetail(@PathVariable("memberId") Long memberId,
                                @PathVariable("clubId") Long clubId,
                                Model model) {
-        ClubMemberDTO clubMemberDTO = clubMemberService.findById(memberId, clubId);
+        ClubMemberDTO clubMemberDTO = clubMemberService.findByMemberId(memberId, clubId);
         model.addAttribute("clubMember", clubMemberDTO);
         return "club_member_detail";
     }
