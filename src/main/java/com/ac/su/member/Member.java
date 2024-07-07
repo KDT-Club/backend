@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "Member")
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
@@ -28,8 +29,8 @@ public class Member {
     @Column(length = 20, nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private MemberStatus status;
+    @Column(length = 20,nullable = false)
+    private String status;
 
     @Column
     private String memberImageURL;
