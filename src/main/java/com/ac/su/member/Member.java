@@ -28,23 +28,12 @@ public class Member {
     @Column
     private String password;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private MemberStatus status;
+    //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
+//    @Column
+//    @Enumerated(EnumType.STRING)
+//    private MemberStatus status;
 
     @Column
     private String memberImageURL;
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", department='" + department + '\'' +
-                ", studentId=" + studentId +
-                ", password='" + password + '\'' +
-                ", status=" + status +
-                ", memberImageURL='" + memberImageURL + '\'' +
-                '}';
-    }
 }
