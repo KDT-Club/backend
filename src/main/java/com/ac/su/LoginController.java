@@ -49,8 +49,8 @@ public class LoginController {
 
     @GetMapping("/mainPage")
     String mainpage(Authentication auth) {
-        System.out.println(auth.getPrincipal());
-        System.out.println(auth.getName());
+//        System.out.println(auth.getPrincipal());
+//        System.out.println(auth.getName());
         return "mainpage";
     }
 }

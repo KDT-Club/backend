@@ -30,7 +30,11 @@ public class SecurityConfig { //여기서 Spring Security 설정함
                         .defaultSuccessUrl("/") //성공 시 이동 URL GET
 //                .failureUrl("/fail") //실패 시 이동 URL //이거 없으면  기본적으로 /login?error 페이지로 이동
         );
-        http.logout( logout -> logout.logoutUrl("/logout") );  //이 URL로 GET 요청하면 로그아웃 시켜줌
+        // 로그아웃 설정
+        http.logout((logout) -> logout
+                .logoutUrl("/logout") // 이 URL로 GET 요청하면 로그아웃 시켜줌
+                .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 URL 설정
+        );
         return http.build();
     }
 }
