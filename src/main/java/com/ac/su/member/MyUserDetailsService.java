@@ -33,7 +33,7 @@ public class MyUserDetailsService implements UserDetailsService {
         a.setId(user.getId());
         a.setName(user.getName());
         a.setDepartment(user.getDepartment());
-        a.setStatus(user.getStatus());
+//        a.setStatus(user.getStatus()); //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
         a.setMemberImageURL(user.getMemberImageURL());
 
         return a;
