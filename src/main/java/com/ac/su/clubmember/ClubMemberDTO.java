@@ -1,4 +1,4 @@
 package com.ac.su.clubmember;
 
-public class ClubMemberDto {
+public class ClubMemberDTO {
 }
