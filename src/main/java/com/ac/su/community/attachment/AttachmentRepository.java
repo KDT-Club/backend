@@ -1,4 +1,4 @@
 package com.ac.su.community.attachment;
 
-public class AttachmentRepository {
+public interface AttachmentRepository {
 }

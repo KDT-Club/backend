@@ -1,4 +1,4 @@
 package com.ac.su.clubmember;
 
-public class ClubMemberRepository {
+public interface ClubMemberRepository {
 }

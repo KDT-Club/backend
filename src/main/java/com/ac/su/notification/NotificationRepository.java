@@ -1,4 +1,4 @@
 package com.ac.su.notification;
 
-public class NotificationRepository {
+public interface NotificationRepository {
 }

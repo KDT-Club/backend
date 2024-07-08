@@ -1,4 +1,4 @@
 package com.ac.su.joinrequest;
 
-public class JoinRequestRepository {
+public interface JoinRequestRepository {
 }
