@@ -14,7 +14,7 @@ public class ClubMemberDTO {
     private String memberImageurl;
     private String name;
     private MemberStatus status;
-    private int studentId;
+    private String studentId;
     private Long memberId;
 
     public static ClubMemberDTO toClubMemberDTO(ClubMember clubMember){

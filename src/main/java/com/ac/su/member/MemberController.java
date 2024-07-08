@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequiredArgsConstructor
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +27,13 @@ import java.util.Optional;
 @RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
+    private final MemberRepository memberRepository; //member 객체에 대한 입출력 함수
+
+    //메인페이지로 이동
+    @GetMapping("/")
+    ResponseMessage test() {
+        return new ResponseMessage("성공");
+    }
 
     @GetMapping
     public ResponseEntity<List<Member>> getAllMembers() {
@@ -93,11 +98,3 @@ public class MemberController {
         return new ResponseEntity<>(members, HttpStatus.OK);
     }
 }
-
-    private final MemberRepository memberRepository; //member 객체에 대한 입출력 함수
-
-    //메인페이지로 이동
-    @GetMapping("/")
-    ResponseMessage test() {
-        return new ResponseMessage("성공");
-    }

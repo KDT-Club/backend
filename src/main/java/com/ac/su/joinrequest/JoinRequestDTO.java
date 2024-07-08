@@ -21,7 +21,7 @@ public class JoinRequestDTO {
     private String memberImageurl;
     private String name;
     private String department;
-    private int studentId;
+    private String studentId;
 
     public static JoinRequestDTO toJoinRequestDTO(JoinRequest joinRequest){
         JoinRequestDTO joinRequestDTO = new JoinRequestDTO();

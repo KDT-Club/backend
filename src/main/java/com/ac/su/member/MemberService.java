@@ -29,7 +29,7 @@ public class MemberService {
             Member member = new Member();
             member.setName("이다민 " + i);
             member.setDepartment("컴퓨터공학부" + i);
-            member.setStudentId(2021100148 + i);
+            member.setStudentId(String.valueOf(2021100148 + i));
             member.setPassword("password"+i);
             member.setStatus(MemberStatus.MEMBER);
             member.setMemberImageURL("static/path/to/image"+i);
