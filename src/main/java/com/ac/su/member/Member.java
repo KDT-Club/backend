@@ -1,7 +1,5 @@
 package com.ac.su.member;
 
-
-import com.ac.su.clubmember.MemberStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,11 +27,11 @@ public class Member {
     @Column(length = 20, nullable = false)
     private String password;
 
-    @Column(length = 20,nullable = false)
-    private String status;
-
     @Column
     private String memberImageURL;
+
+    @Column(unique = true, nullable = false)
+    private int phone;
 
     @Override
     public String toString() {
@@ -43,7 +41,7 @@ public class Member {
                 ", department='" + department + '\'' +
                 ", studentId=" + studentId +
                 ", password='" + password + '\'' +
-                ", status=" + status +
+                ", phone=" + phone +
                 ", memberImageURL='" + memberImageURL + '\'' +
                 '}';
     }
