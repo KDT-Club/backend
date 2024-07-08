@@ -16,19 +16,20 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String name;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String department;
 
-    @Column(unique = true, nullable = false)
+    @Column
     private int studentId;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String password;
 
-    @Column(nullable = false)
+    @Column
+    @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
     @Column

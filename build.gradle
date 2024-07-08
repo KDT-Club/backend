@@ -27,7 +27,6 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //타임리프 엔진템플릿 라이브러리
     runtimeOnly 'com.mysql:mysql-connector-j' //MySQL 접속 도와주는 lib
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'// ORM lib
     implementation 'org.springframework.boot:spring-boot-starter-security' // spring security 라이브러리
