@@ -23,7 +23,7 @@ public class Member {
     private String department;
 
     @Column
-    private int studentId;
+    private String studentId;
 
     @Column
     private String password;
