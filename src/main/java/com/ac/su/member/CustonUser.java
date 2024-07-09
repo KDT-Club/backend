@@ -16,6 +16,7 @@ public class CustonUser extends User {
 //    private MemberStatus status; // MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
     private String memberImageURL;
     private String name;
+    private String phone;
 
     public CustonUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);

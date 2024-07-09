@@ -36,4 +36,6 @@ public class Member {
     @Column
     private String memberImageURL;
 
+    @Column
+    private String phone; //폰 번호 추가
 }
