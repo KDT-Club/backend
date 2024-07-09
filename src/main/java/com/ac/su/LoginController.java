@@ -4,6 +4,7 @@ import com.ac.su.clubmember.MemberStatus;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,7 @@ public class LoginController {
 
     //회원가입 기능 - /signup
     @PostMapping("/signup")
-    ResponseMessage signup(
+    ResponseEntity signup(
             String name,
             String username,
             String password,
@@ -31,26 +32,24 @@ public class LoginController {
         var hashed_password = passwordEncoder.encode(password);
         member.setPassword(hashed_password); //비밀번호 해싱해서 저장
         member.setDepartment(department); // 학과
-        member.setStatus(MemberStatus.MEMBER); //멤버 상태: 초기 회원가입 시에는 Member로 고정
+        //memberStatus컬럼은 clubMember 컬럼으로 옮겨짐 after 0708(화) 스프린트 회의
         memberRepository.save(member); //DB에 유저 정보 저장
 
-        return new ResponseMessage("성공"); //로그인 페이지로 이동 리다이렉트
+        return ResponseEntity.ok(new ResponseMessage("성공")); //로그인 페이지로 이동 리다이렉트
     }
 
     //로그인 페이지로 이동
     @GetMapping("/login")
     String login() {
-//        var a = memberRepository.findByStudentId("2020101460");
-//        System.out.println(a.get());
-//        var hashed_password = passwordEncoder.encode("1234");
-//        System.out.println(hashed_password);
+        // 로그인 페이지로 이동
         return "login";
     }
+
     @GetMapping("/mainPage")
     String mainpage(Authentication auth) {
-        System.out.println(auth.getPrincipal());
-        System.out.println(auth.getName());
+        //feature/myclub 브랜치에 최신화한 main 브랜치 merge 해볼게
+//        System.out.println(auth.getPrincipal());
+//        System.out.println(auth.getName());
         return "mainpage";
     }
-
 }

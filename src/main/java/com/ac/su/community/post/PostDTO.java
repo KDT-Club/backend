@@ -1,4 +1,4 @@
 package com.ac.su.community.post;
 
-public class PostDto {
+public class PostDTO {
 }

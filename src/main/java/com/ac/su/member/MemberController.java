@@ -13,5 +13,4 @@ public class MemberController {
     ResponseMessage test() {
         return new ResponseMessage("성공");
     }
-
 }

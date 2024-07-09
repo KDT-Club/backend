@@ -1,4 +1,4 @@
 package com.ac.su.notification;
 
-public class NotificationDto {
+public class NotificationDTO {
 }
