@@ -49,6 +49,7 @@ public class LoginController {
 
     @GetMapping("/mainPage")
     String mainpage(Authentication auth) {
+        //feature/myclub 브랜치에 최신화한 main 브랜치 merge 해볼게
 //        System.out.println(auth.getPrincipal());
 //        System.out.println(auth.getName());
         return "mainpage";
