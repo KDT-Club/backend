@@ -3,18 +3,31 @@ package com.ac.su.joinrequest;
 import com.ac.su.clubmember.ClubMemberDTO;
 import com.ac.su.clubmember.MemberStatus;
 import com.ac.su.clubmember.RequestStatus;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/clubs")
 public class JoinRequestController {
     private final JoinRequestService joinRequestService;
+
+    @PostMapping("/{clubName}/applications")
+    public ResponseEntity<?> applyToClub(@PathVariable String clubName,
+                                         @RequestBody ApplicationRequest request,
+                                         Authentication auth) {
+        //가입 신청 로직 서비스 레이어로 분리함
+        ResponseEntity message = joinRequestService.applyToClub(clubName, request, auth);
+        return message;
+    }
 
     // 동아리 id에 따른 동아리 지원서 리스트 출력
     @GetMapping("/{clubId}/joinRequest")
@@ -51,5 +64,12 @@ public class JoinRequestController {
         joinRequestService.denyRequest(requestId);
         // 가입 거절 후 회원 리스트로 리다이렉트
         return "redirect:/clubs/" + clubId + "/joinRequest";
+    }
+
+    @Getter
+    @Setter
+    class ApplicationRequest {
+        private String clubName;
+        private String motivation;
     }
 }
