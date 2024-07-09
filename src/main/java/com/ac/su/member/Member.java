@@ -28,6 +28,7 @@ public class Member {
     @Column(length = 20, nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
     @Column(nullable = false)
     private MemberStatus status;
 

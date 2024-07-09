@@ -1,4 +1,13 @@
 package com.ac.su.member;
 
-public class MemberRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByStudentId(int studentId); // 학번으로 검색할 수 있도록 추가
+
+    boolean existsByStudentId(int i);
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <script>
+        function toggleFileInput() {
+            var attachmentFlag = document.querySelector('input[name="attachmentFlag"]:checked');
+            var fileInput = document.getElementById("fileInput");
+
+            if (attachmentFlag && attachmentFlag.value === "Y") {
+                fileInput.style.display = "block";
+            } else {
+                fileInput.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            toggleFileInput(); // 초기 상태 설정
+            var radioButtons = document.querySelectorAll('input[name="attachmentFlag"]');
+            radioButtons.forEach(function(radio) {
+                radio.addEventListener("change", toggleFileInput);
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>커뮤니티 자유게시판</h1>
+<form th:action="@{'/board/' + ${boardId} + '/posts'}" method="post" th:object="${postDTO}" enctype="multipart/form-data">
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" th:field="*{title}" required><br><br>
+
+    <label for="content">Content:</label><br>
+    <textarea id="content" name="content" th:field="*{content}" required></textarea><br><br>
+
+    <label>Attachment:</label><br>
+    <input type="radio" id="attachmentFlagYes" name="attachmentFlag" th:field="*{attachmentFlag}" value="Y">
+    <label for="attachmentFlagYes">Yes</label><br>
+    <input type="radio" id="attachmentFlagNo" name="attachmentFlag" th:field="*{attachmentFlag}" value="N" checked>
+    <label for="attachmentFlagNo">No</label><br><br>
+
+    <div id="fileInput" style="display:none;">
+        <label for="attachment">Choose file:</label><br>
+        <input type="file" id="attachment" name="attachment" th:field="*{attachment}"><br><br>
+    </div>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

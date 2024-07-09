@@ -15,13 +15,14 @@ import java.time.LocalDateTime;
 @ToString
 public class Attachment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-incremnet
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
     @Column(name="attachment_id")
     private Long id;
     private String attachmentName;
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 날짜
+
     @ManyToOne
     @JoinColumn(name="post_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Post postId; // 게시글 고유 번호
+    private Post post; // 게시글 고유 번호
 }
