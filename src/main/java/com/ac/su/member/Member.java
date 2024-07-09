@@ -27,7 +27,7 @@ public class Member {
     @Column(length = 20, nullable = false)
     private String password;
 
-    @Column
+    @Column(length = 20, nullable = false)
     private String memberImageURL;
 
     @Column(unique = true, nullable = false)

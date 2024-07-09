@@ -15,7 +15,7 @@ public class MemberController {
     private MemberService memberService;
 
     // 멤버 불러오기
-    @GetMapping("/member")
+    @GetMapping("/{memberId}")
     public ResponseEntity<Member> getMember(@RequestParam Long id) {
         Optional<Member> memberOptional = memberService.getMemberById(id);
         if (memberOptional.isPresent()) {
@@ -25,7 +25,7 @@ public class MemberController {
         }
     }
     // 멤버 정보 수정
-    @PostMapping("/member")
+    @PostMapping("/{memberId}")
     // id랑 dto 값 받아서 저장 - 부분 수정이라도 전체 값을 받아야 함.
     public ResponseEntity<Member> updateMember(@RequestParam Long id, @RequestBody MemberDTO memberDTO) {
         Member updatedMember = memberService.updateMember(id, memberDTO);
@@ -36,7 +36,7 @@ public class MemberController {
         }
     }
     // 멤버 삭제
-    @DeleteMapping("/member")
+    @DeleteMapping("/{memberId}")
     public ResponseEntity<?> deleteMember(@RequestParam Long id) {
         Optional<Member> memberOptional = memberService.getMemberById(id);
         if (memberOptional.isPresent()) {
