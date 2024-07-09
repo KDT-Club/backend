@@ -35,7 +35,7 @@ public class ClubMemberService {
     // 회원 상태 수정
     public void changeStatus(Long memberId, Long clubId, MemberStatus status) {
         ClubMember clubMember = clubMemberRepository.findById(new ClubMemberId(memberId, clubId)).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
-        clubMember.getMember().setStatus(status);
+        clubMember.setStatus(status);
         memberRepository.save(clubMember.getMember());
     }
 

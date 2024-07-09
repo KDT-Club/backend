@@ -21,7 +21,7 @@ public class ClubMemberDTO {
         ClubMemberDTO clubMemberDTO = new ClubMemberDTO();
         clubMemberDTO.setMemberImageurl(clubMember.getMember().getMemberImageURL());
         clubMemberDTO.setName(clubMember.getMember().getName());
-        clubMemberDTO.setStatus(clubMember.getMember().getStatus());
+        clubMemberDTO.setStatus(clubMember.getStatus());
         clubMemberDTO.setStudentId(clubMember.getMember().getStudentId());
         clubMemberDTO.setMemberId(clubMember.getMember().getId());
 
