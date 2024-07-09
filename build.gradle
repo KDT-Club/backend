@@ -1,16 +1,14 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.1'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.jh'
+group = 'ac.su'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+    sourceCompatibility = '17'
 }
 
 configurations {
@@ -28,6 +26,7 @@ dependencies {
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     implementation 'org.hibernate.validator:hibernate-validator:6.2.3.Final'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     compileOnly 'org.projectlombok:lombok:1.18.24'
@@ -43,6 +42,13 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.33' //mySQL 의존성 추가
     // Spring Boot Starter Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j' //MySQL 접속 도와주는 lib
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'// ORM lib
+    implementation 'org.springframework.boot:spring-boot-starter-security' // spring security 라이브러리
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE' //spring security 라이브러리
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0' // Springdoc OpenAPI 의존성 추가
 
     // MySQL JDBC Driver
     implementation 'mysql:mysql-connector-java:8.0.33'

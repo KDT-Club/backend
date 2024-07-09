@@ -7,9 +7,9 @@ public class MemberDTO {
     private Long id;
     private String name;
     private String department;
-    private int studentId;
+    private String studentId;
     private String password;
-    private int phone;
+    private String phone;
     private String memberImageURL;
 
 }

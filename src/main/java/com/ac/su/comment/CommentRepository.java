@@ -1,4 +1,5 @@
 package com.ac.su.comment;
 
-public class CommentRepository {
+public interface CommentRepository {
+
 }

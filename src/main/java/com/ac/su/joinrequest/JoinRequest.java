@@ -20,7 +20,8 @@ public class JoinRequest {
     @Column(columnDefinition = "TEXT")
     private String introduction;
 
-    @Column(length = 20)
+    @Column
+    @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
     @ManyToOne

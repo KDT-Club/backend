@@ -5,13 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
     private PostService postService;
 
-    @GetMapping("/members/{memberId}")
+    @GetMapping("/posts/{memberId}")
     public List<Post> getPostsByMemberId(@RequestParam Long id) {
         return postService.getPostsByMemberId(id);
     }

@@ -15,23 +15,23 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String name;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String department;
 
-    @Column(unique = true, nullable = false)
-    private int studentId;
+    @Column
+    private String studentId;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String password;
 
-    @Column(length = 20, nullable = false)
+    @Column
     private String memberImageURL;
 
-    @Column(unique = true, nullable = false)
-    private int phone;
+    @Column
+    private String phone;
 
     @Override
     public String toString() {

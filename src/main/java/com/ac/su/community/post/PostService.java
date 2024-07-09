@@ -15,3 +15,4 @@ public class PostService {
             return postRepository.findByMemberId(memberId);
   }
 }
+
