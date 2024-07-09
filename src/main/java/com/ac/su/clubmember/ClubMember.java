@@ -29,6 +29,7 @@ public class ClubMember {
     @Column
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+
     @Override
     public String toString() {
         return "ClubMember{" +

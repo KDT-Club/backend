@@ -23,7 +23,7 @@ public class Member {
     private String department;
 
     @Column
-    private int studentId;
+    private String studentId;
 
     @Column
     private String password;
@@ -36,4 +36,6 @@ public class Member {
     @Column
     private String memberImageURL;
 
+    @Column
+    private String phone; //폰 번호 추가
 }

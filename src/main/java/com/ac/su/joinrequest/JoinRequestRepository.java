@@ -1,4 +1,8 @@
 package com.ac.su.joinrequest;
 
-public interface JoinRequestRepository {
+import org.hibernate.mapping.Join;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long> {
+
 }
