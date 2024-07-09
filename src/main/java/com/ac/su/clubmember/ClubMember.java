@@ -26,6 +26,9 @@ public class ClubMember {
     private Club club;
 
     //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
+    @Column
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status;
 
     @Override
     public String toString() {

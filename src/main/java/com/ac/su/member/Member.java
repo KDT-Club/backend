@@ -16,35 +16,24 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String department;
 
-    @Column(unique = true, nullable = false)
-    private String studentId;
+    @Column
+    private int studentId;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MemberStatus status;
+    //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
+//    @Column
+//    @Enumerated(EnumType.STRING)
+//    private MemberStatus status;
 
     @Column
     private String memberImageURL;
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", department='" + department + '\'' +
-                ", studentId=" + studentId +
-                ", password='" + password + '\'' +
-                ", status=" + status +
-                ", memberImageURL='" + memberImageURL + '\'' +
-                '}';
-    }
 }
