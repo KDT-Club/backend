@@ -29,6 +29,16 @@ public class BoardController {
         var a = postRepository.findByBoardId(board);
         return a;
     }
+    @GetMapping("/board/{board_id}/posts/{post_id}")
+    public Post getPostDetails(@PathVariable Long board_id, @PathVariable Long post_id) {
+        // 주어진 board_id와 post_id에 해당하는 post 검색
+        Optional<Post> post = postRepository.findById(post_id);
+        if (post.isPresent() && post.get().getBoardId().getId().equals(board_id)) {
+            return post.get();
+        } else {
+            throw new IllegalArgumentException("Post not found with id: " + post_id + " and board_id: " + board_id);
+        }
+    }
 
 @GetMapping("/clubs/{clubId}/board/2/posts")
 public List<Post> getAllNoticePosts(@PathVariable Long clubId) {
