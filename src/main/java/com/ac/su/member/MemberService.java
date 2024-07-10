@@ -10,12 +10,13 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
+    public Optional<Member> getMemberById(Long memberId) {
+
+        return memberRepository.findById(memberId);
     }
 
-    public Member updateMember(Long id, MemberDTO memberDTO) {
-        Optional<Member> memberOptional = memberRepository.findById(id);
+    public Member updateMember(Long memberId, MemberDTO memberDTO) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
         //멤버 존재 여부 확인 및 수정
         if (memberOptional.isPresent()) {
             Member member = memberOptional.get();
@@ -31,8 +32,8 @@ public class MemberService {
         return null;
     }
 
-    public void deleteMember(Long id) {
-        memberRepository.deleteById(id);
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
     }
 }
 
