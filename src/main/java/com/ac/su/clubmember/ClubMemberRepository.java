@@ -8,8 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface ClubMemberRepository extends JpaRepository<ClubMember, ClubMemberId> {
-    // 입력된 회원의 선호 카테고리를 검색
-    List<UserFavoriteCategory> findByMember(Member member);
-    // 입력된 회원의 선호 카테고리를 검색
-    List<UserFavoriteCategory> findByMemberId(Long memberId);
+    Optional<ClubMember> findByMemberId(Long memberId);
+    //     findByMember(Long memberId);
+    List<ClubMember> findByClubId(Long clubId);
+    boolean existsById(ClubMemberId clubMemberId);
 }

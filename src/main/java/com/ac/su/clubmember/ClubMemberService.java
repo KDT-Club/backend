@@ -43,4 +43,10 @@ public class ClubMemberService {
     public void deleteMember(Long memberId, Long clubId) {
         clubMemberRepository.deleteById(new ClubMemberId(memberId, clubId));
     }
+
+    // 동아리 회원 존재 여부 검사
+    public boolean existsById(Long memberId, Long clubId) {
+        ClubMemberId clubMemberId = new ClubMemberId(memberId, clubId);
+        return clubMemberRepository.existsById(clubMemberId);
+    }
 }
