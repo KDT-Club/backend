@@ -2,7 +2,7 @@ package com.ac.su.community.post;
 
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/board/{boardId}/posts")
+@RequiredArgsConstructor
 public class PostController {
-
-    @Autowired
-    private PostService postService;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private final PostService postService;
+    private final MemberRepository memberRepository;
 
     @GetMapping
     public String createPostForm(@PathVariable Long boardId, Model model) {

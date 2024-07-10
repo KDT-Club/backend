@@ -6,7 +6,7 @@ import com.ac.su.community.attachment.AttachmentRepository;
 import com.ac.su.community.board.Board;
 import com.ac.su.community.board.BoardRepository;
 import com.ac.su.member.Member;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,16 +16,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private BoardRepository boardRepository;
-
-    @Autowired
-    private AttachmentRepository attachmentRepository;
+    private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
+    private final AttachmentRepository attachmentRepository;
 
     private static final String UPLOADED_FOLDER = "uploads/";
 

@@ -4,6 +4,7 @@ import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.community.board.Board;
 import com.ac.su.member.Member;
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -56,8 +57,6 @@ public class Post {
 
     @Column(name = "attachment_name", nullable = true)
     private String attachmentName;
-
-    // Additional methods and relationships
 
     public void setAttachmentName(String attachmentName) {
         this.attachmentName = attachmentName;

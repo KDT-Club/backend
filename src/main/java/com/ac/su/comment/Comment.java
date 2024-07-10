@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
+
 
 import java.time.LocalDateTime;
 
@@ -21,7 +21,6 @@ public class Comment {
     private Long id;
     @Column
     private String content; //댓글 내용
-    @CreationTimestamp
     @Column
     private LocalDateTime createdAt; // 생성 날짜
     @ManyToOne

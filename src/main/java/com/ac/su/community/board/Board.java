@@ -9,6 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Table(name = "board")
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
