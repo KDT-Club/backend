@@ -54,5 +54,19 @@ public List<Post> getAllNoticePosts(@PathVariable Long clubId) {
     List<Post> posts = postRepository.findByBoardIdAndClubName(board, club.getName());
     return posts;
     }
+    @GetMapping("/clubs/{club_id}/board/{board_id}/posts/{post_id}")
+    public Post getPostDetails(@PathVariable Long club_id, @PathVariable Long board_id, @PathVariable Long post_id) {
+        // 주어진 club_id로 클럽 정보 가져오기
+        Club club = clubRepository.findById(club_id)
+                .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + club_id));
+
+        // 주어진 post_id로 post 검색
+        Optional<Post> post = postRepository.findById(post_id);
+        if (post.isPresent() && post.get().getBoardId().getId().equals(board_id) && post.get().getClubName().equals(club.getName())) {
+            return post.get();
+        } else {
+            throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
+        }
+    }
 
 }
