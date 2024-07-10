@@ -35,8 +35,8 @@ public class ClubMemberRestController {
     @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
     public ResponseEntity<?> changeStatus(@PathVariable("memberId") Long memberId,
                                           @PathVariable("clubId") Long clubId,
-                                          @RequestParam("myStatus") MemberStatus myStatus,
-                                          @RequestParam("status") MemberStatus changeStatus) {
+                                          @RequestParam("status") MemberStatus myStatus,
+                                          @RequestParam("changeStatus") MemberStatus changeStatus) {
         // 동아리 회장인지 검사
         if (myStatus!=MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -52,7 +52,7 @@ public class ClubMemberRestController {
     @PostMapping("/{clubId}/clubMember/{memberId}/deleteMember")
     public ResponseEntity<?> deleteMember(@PathVariable("memberId") Long memberId,
                                           @PathVariable("clubId") Long clubId,
-                                          @RequestParam("myStatus") MemberStatus myStatus) {
+                                          @RequestParam("status") MemberStatus myStatus) {
         // 동아리 회장인지 검사
         if (myStatus!=MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
