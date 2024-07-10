@@ -10,7 +10,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/clubs")
-public class ClubMemberController {
+public class ClubMemberViewController {
     private final ClubMemberService clubMemberService;
 
     // 동아리 id에 따른 동아리 회원 리스트 출력
