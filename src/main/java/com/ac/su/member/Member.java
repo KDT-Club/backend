@@ -1,7 +1,5 @@
 package com.ac.su.member;
 
-
-import com.ac.su.clubmember.MemberStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "Member")
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
@@ -28,14 +27,22 @@ public class Member {
     @Column
     private String password;
 
-    //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
-//    @Column
-//    @Enumerated(EnumType.STRING)
-//    private MemberStatus status;
-
     @Column
     private String memberImageURL;
 
     @Column
-    private String phone; //폰 번호 추가
+    private String phone;
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", studentId=" + studentId +
+                ", password='" + password + '\'' +
+                ", phone=" + phone +
+                ", memberImageURL='" + memberImageURL + '\'' +
+                '}';
+    }
 }

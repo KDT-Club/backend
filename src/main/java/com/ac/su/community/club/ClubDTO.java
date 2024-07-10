@@ -17,4 +17,5 @@ public class ClubDTO {
     @CreationTimestamp
     private LocalDateTime createdAt;
     private String clubImgUrl;
+
 }

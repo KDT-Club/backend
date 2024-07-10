@@ -1,5 +1,6 @@
 package com.ac.su.community.club;
 
+
 import com.ac.su.ResponseMessage;
 import com.ac.su.clubmember.ClubMember;
 import com.ac.su.clubmember.ClubMemberRepository;
@@ -78,5 +79,6 @@ public class ClubController {
         Optional<Club> a = clubRepository.findByName(clubName); //간단해서 서비스 레이어로 분리안했음
         return a;
     }
+
 
 }
