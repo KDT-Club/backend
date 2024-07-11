@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +49,18 @@ public class ClubMemberService {
     public boolean existsById(Long memberId, Long clubId) {
         ClubMemberId clubMemberId = new ClubMemberId(memberId, clubId);
         return clubMemberRepository.existsById(clubMemberId);
+    }
+
+    // 동아리 회원의 등급 확인
+    public MemberStatus getMemberStatus(ClubMemberId clubMemberId) {
+        Optional<ClubMember> clubMember = clubMemberRepository.findById(clubMemberId);
+
+        // 회원이 특정 동아리에 속해 있는지 확인하고 상태를 반환
+        if (clubMember.isPresent()) {
+            return clubMember.get().getStatus();
+        } else {
+            // 동아리에 속해 있지 않으면 예외 발생
+            throw new IllegalArgumentException("회원이 동아리에 가입되지 않았습니다.");
+        }
     }
 }

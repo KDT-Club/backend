@@ -1,6 +1,7 @@
 package com.ac.su.joinrequest;
 
 import com.ac.su.ResponseMessage;
+import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberService;
 import com.ac.su.clubmember.MemberStatus;
 import com.ac.su.member.CustonUser;
@@ -28,18 +29,14 @@ public class JoinRequestRestController {
     @GetMapping("/{clubId}/joinRequest")
     public ResponseEntity<?>  joinRequestList(
             @PathVariable("clubId") Long clubId,
-            @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        // 회원 상태 가져오기
         CustonUser user = (CustonUser) auth.getPrincipal();
-        // 동아리 회장이 아닐 때
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
-        }
-        // 동아리 회장일 때
-        // PathVariable로 받은 동아리의 회장인지 검사
-        else {
-            if (!clubMemberService.existsById(user.getId(), clubId))
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 동아리 지원서 리스트 출력
@@ -53,18 +50,14 @@ public class JoinRequestRestController {
     public ResponseEntity<?> requestDetail(
             @PathVariable("clubId") Long clubId,
             @PathVariable("requestId") Long requestId,
-            @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        // 회원 상태 가져오기
         CustonUser user = (CustonUser) auth.getPrincipal();
-        // 동아리 회장이 아닐 때
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
-        }
-        // 동아리 회장일 때
-        // PathVariable로 받은 동아리의 회장인지 검사
-        else {
-            if (!clubMemberService.existsById(user.getId(), clubId))
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 동아리 지원서 상세 정보 출력
@@ -79,18 +72,14 @@ public class JoinRequestRestController {
             @PathVariable("requestId") Long requestId,
             @PathVariable("clubId") Long clubId,
             @RequestParam("memberId") Long memberId,
-            @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        // 회원 상태 가져오기
         CustonUser user = (CustonUser) auth.getPrincipal();
-        // 동아리 회장이 아닐 때
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
-        }
-        // 동아리 회장일 때
-        // PathVariable로 받은 동아리의 회장인지 검사
-        else {
-            if (!clubMemberService.existsById(user.getId(), clubId))
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 가입 승인
@@ -104,18 +93,14 @@ public class JoinRequestRestController {
     public ResponseEntity<?> denyRequest(
             @PathVariable("requestId") Long requestId,
             @PathVariable("clubId") Long clubId,
-            @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        // 회원 상태 가져오기
         CustonUser user = (CustonUser) auth.getPrincipal();
-        // 동아리 회장이 아닐 때
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
-        }
-        // 동아리 회장일 때
-        // PathVariable로 받은 동아리의 회장인지 검사
-        else {
-            if (!clubMemberService.existsById(user.getId(), clubId))
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 가입 거절
