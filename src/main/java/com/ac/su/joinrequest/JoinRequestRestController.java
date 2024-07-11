@@ -36,7 +36,7 @@ public class JoinRequestRestController {
 
         // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 동아리 지원서 리스트 출력

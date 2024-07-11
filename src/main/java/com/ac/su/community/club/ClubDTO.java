@@ -1,8 +1,7 @@
 package com.ac.su.community.club;
 
-import com.ac.su.clubmember.ClubMember;
-import com.ac.su.clubmember.ClubMemberDTO;
-import com.ac.su.member.Member;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
