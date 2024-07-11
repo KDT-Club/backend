@@ -13,7 +13,7 @@ public class ClubDTO {
     private Long clubId;
     private String clubName;
     private String description;
-    private String category;
+    private CategoryStatus category;
     private Long member;
     @CreationTimestamp
     private LocalDateTime createdAt;
