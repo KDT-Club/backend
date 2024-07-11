@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/board/1/posts")
 public class PostController {
 
     @Autowired
