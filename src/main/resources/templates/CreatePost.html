@@ -3,35 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Post</title>
-    <script>
-        function toggleFileInput() {
-            var attachmentFlag = document.querySelector('input[name="attachmentFlag"]:checked');
-            var fileInput = document.getElementById("fileInput");
-
-            if (attachmentFlag && attachmentFlag.value === "Y") {
-                fileInput.style.display = "block";
-            } else {
-                fileInput.style.display = "none";
-            }
+    <style>
+        .file-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
-
+        .file-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .file-item .remove-button {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .file-item .remove-button:hover {
+            color: darkred;
+        }
+    </style>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
+            const attachmentFlagYes = document.getElementById("attachmentFlagYes");
+            const fileInputContainer = document.getElementById("fileInputContainer");
+            const fileInput = document.getElementById("attachments");
+            const fileList = document.getElementById("fileList");
+
+            attachmentFlagYes.addEventListener("change", toggleFileInput);
+            fileInput.addEventListener("change", updateFileList);
+
+            function toggleFileInput() {
+                fileInputContainer.style.display = attachmentFlagYes.checked ? "block" : "none";
+            }
+
+            function updateFileList() {
+                while (fileList.firstChild) {
+                    fileList.removeChild(fileList.firstChild);
+                }
+
+                const files = fileInput.files;
+                if (files.length === 0) {
+                    const noFilesMessage = document.createElement("p");
+                    noFilesMessage.textContent = "No files selected.";
+                    fileList.appendChild(noFilesMessage);
+                } else {
+                    const list = document.createElement("ul");
+                    list.style.listStyleType = "none";
+                    for (let i = 0; i < files.length; i++) {
+                        const listItem = document.createElement("li");
+                        listItem.className = "file-item";
+
+                        const thumbnail = document.createElement("img");
+                        thumbnail.src = URL.createObjectURL(files[i]);
+                        listItem.appendChild(thumbnail);
+
+                        const fileName = document.createElement("span");
+                        fileName.textContent = files[i].name;
+                        listItem.appendChild(fileName);
+
+                        const removeButton = document.createElement("button");
+                        removeButton.innerHTML = "&times;";
+                        removeButton.type = "button";
+                        removeButton.className = "remove-button";
+                        removeButton.addEventListener("click", function() {
+                            removeFile(i);
+                        });
+
+                        listItem.appendChild(removeButton);
+                        list.appendChild(listItem);
+                    }
+                    fileList.appendChild(list);
+                }
+            }
+
+            function removeFile(index) {
+                const dt = new DataTransfer();
+                const files = fileInput.files;
+
+                for (let i = 0; i < files.length; i++) {
+                    if (i !== index) {
+                        dt.items.add(files[i]);
+                    }
+                }
+
+                fileInput.files = dt.files;
+                updateFileList();
+            }
+
             toggleFileInput(); // 초기 상태 설정
-            var radioButtons = document.querySelectorAll('input[name="attachmentFlag"]');
-            radioButtons.forEach(function(radio) {
-                radio.addEventListener("change", toggleFileInput);
-            });
         });
     </script>
 </head>
 <body>
-<h1>커뮤니티 자유게시판</h1>
-<form th:action="@{'/board/' + ${boardId} + '/posts'}" method="post" th:object="${postDTO}" enctype="multipart/form-data">
+<h1 th:text="${boardId == 1 ? '커뮤니티 자유게시판' : (boardId == 2 ? '동아리 공지게시판' : (boardId == 3 ? '동아리 활동게시판' : '동아리 내부 자유게시판'))}">게시판</h1>
+<form th:action="@{'/board/' + ${boardId} + (boardId == 3 ? '/club/' + ${clubId} : '') + '/posts'}" method="post" th:object="${postDTO}" enctype="multipart/form-data">
     <label for="title">Title:</label><br>
     <input type="text" id="title" name="title" th:field="*{title}" required><br><br>
 
     <label for="content">Content:</label><br>
     <textarea id="content" name="content" th:field="*{content}" required></textarea><br><br>
+
+    <div th:if="${boardId == 3}">
+        <label for="clubName">Club Name:</label><br>
+        <input type="text" id="clubName" name="clubName" th:value="${clubName}" readonly><br><br>
+    </div>
 
     <label>Attachment:</label><br>
     <input type="radio" id="attachmentFlagYes" name="attachmentFlag" th:field="*{attachmentFlag}" value="Y">
@@ -39,9 +119,12 @@
     <input type="radio" id="attachmentFlagNo" name="attachmentFlag" th:field="*{attachmentFlag}" value="N" checked>
     <label for="attachmentFlagNo">No</label><br><br>
 
-    <div id="fileInput" style="display:none;">
-        <label for="attachment">Choose file:</label><br>
-        <input type="file" id="attachment" name="attachment" th:field="*{attachment}"><br><br>
+    <div id="fileInputContainer" style="display:none;">
+        <label for="attachments">Choose files:</label><br>
+        <input type="file" id="attachments" name="attachments" th:field="*{attachments}" multiple><br><br>
+        <div id="fileList">
+            <p>No files selected.</p>
+        </div>
     </div>
 
     <input type="submit" value="Submit">

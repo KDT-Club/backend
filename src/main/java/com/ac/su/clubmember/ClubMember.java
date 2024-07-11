@@ -6,21 +6,20 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
-@Table(name = "ClubMember")
+@Table(name = "club_member")
 public class ClubMember {
-    @EmbeddedId
-    private ClubMemberId id;
 
-    @MapsId("memberId")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
-    @MapsId("clubId")
     @ManyToOne
     @JoinColumn(name = "club_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Club club;

@@ -1,10 +1,13 @@
 package com.ac.su.member;
 
-
+import com.ac.su.clubmember.ClubMember;
 import com.ac.su.clubmember.MemberStatus;
+import com.ac.su.community.club.Club;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,7 +25,7 @@ public class Member {
     @Column(length = 20, nullable = false)
     private String department;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "student_id")
     private int studentId;
 
     @Column(length = 20, nullable = false)
@@ -32,8 +35,14 @@ public class Member {
     @Column(nullable = false)
     private MemberStatus status;
 
-    @Column
+    @Column(name = "member_imageurl")
     private String memberImageURL;
+
+    @OneToOne(mappedBy = "member")
+    private Club managedClub; // 동아리장
+
+    @OneToMany(mappedBy = "member")
+    private List<ClubMember> joinedClubs; // 가입된 클럽 목록
 
     @Override
     public String toString() {
