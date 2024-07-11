@@ -11,7 +11,7 @@ public class PostController {
     private PostService postService;
 
     @GetMapping("/posts/{memberId}")
-    public List<Post> getPostsByMemberId(@RequestParam Long id) {
-        return postService.getPostsByMemberId(id);
+    public List<Post> getPostsByMemberId(@PathVariable Long memberId) {
+        return postService.getPostsByMemberId(memberId);
     }
 }
