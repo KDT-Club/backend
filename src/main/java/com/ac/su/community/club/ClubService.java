@@ -126,13 +126,19 @@ public class ClubService {
     }
 
     // 동아리 정보 수정
-    public void changeClubInfo(Long clubId, String clubName, String clubSlogan, String description) {
+    public void changeClubInfo(Long clubId, String clubName, String clubSlogan, String description, String clubImgUrl) {
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
         club.setName(clubName);
         club.setClubSlogan(clubSlogan);
         club.setDescription(description);
+        club.setClubImgUrl(clubImgUrl);
 
         clubRepository.save(club);
+    }
+
+    // 동아리 삭제
+    public void deleteClub(Long clubId) {
+        clubRepository.deleteById(clubId);
     }
 }
 

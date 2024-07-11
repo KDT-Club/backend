@@ -60,7 +60,8 @@ public class JoinRequestService {
 
     // 동아리 id로 동아리 지원서 전체 검색
     public List<JoinRequestDTO> findRequestByClubId(Long clubId) {
-        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubIdAndStatus(clubId, RequestStatus.WAITING);
+//        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubIdAndStatus(clubId, RequestStatus.WAITING);
+        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubId(clubId);
         // 동아리 지원서가 한 개도 없을 때 빈 리스트 반환
         if(joinRequestList.isEmpty()){
             return new ArrayList<>();
@@ -81,10 +82,12 @@ public class JoinRequestService {
 
     // 가입 승인
     public void approveRequest(Long requestId, Long clubId, Long memberId) {
-        JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
-        // 지원서 상태 WAITING -> APPROVED
-        joinRequest.setStatus(RequestStatus.APPROVED);
-        joinRequestRepository.save(joinRequest);
+//        JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
+//        // 지원서 상태 WAITING -> APPROVED
+//        joinRequest.setStatus(RequestStatus.APPROVED);
+//        joinRequestRepository.save(joinRequest);
+        // 가입 승인 후 DB에서 지원서 제거
+        joinRequestRepository.deleteById(requestId);
 
         Club club = clubRepository.findById(clubId).orElseThrow();
         Member member = memberRepository.findById(memberId).orElseThrow();

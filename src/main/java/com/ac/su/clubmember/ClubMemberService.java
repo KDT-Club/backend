@@ -1,7 +1,9 @@
 package com.ac.su.clubmember;
 
+import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
 import com.ac.su.member.MemberRepository;
+import com.ac.su.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +64,14 @@ public class ClubMemberService {
             // 동아리에 속해 있지 않으면 예외 발생
             throw new IllegalArgumentException("회원이 동아리에 가입되지 않았습니다.");
         }
+    }
+
+    // 동아리 회장 위임
+    public void delegatePresident(Long clubId) {
+        // 동아리 회장 검색
+        ClubMember clubPresident = clubMemberRepository.findByClubIdAndStatus(clubId, MemberStatus.CLUB_PRESIDENT);
+        // 회장 -> 일반 회원
+        clubPresident.setStatus(MemberStatus.CLUB_MEMBER);
+        clubMemberRepository.save(clubPresident);
     }
 }

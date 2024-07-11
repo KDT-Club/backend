@@ -80,7 +80,8 @@ public class ClubController {
     public ResponseEntity<?> changeStatus(@PathVariable("clubId") Long clubId,
                                           @RequestParam("clubName") String clubName,
                                           @RequestParam("clubSlogan") String clubSlogan,
-                                          @RequestParam("description") String description) {
+                                          @RequestParam("description") String description,
+                                          @RequestParam("clubImgUrl") String clubImgUrl) {
         // 현재 저장되어 있는 동아리 정보 받아옴
         ClubDTO existingClubInfo = clubService.getClubByClubId(clubId);
 
@@ -94,10 +95,32 @@ public class ClubController {
         if (description.isEmpty()) {
             description = existingClubInfo.getDescription();
         }
+        if (clubImgUrl.isEmpty()) {
+            clubImgUrl = existingClubInfo.getDescription();
+        }
 
         // 동아리 정보 변경
-        clubService.changeClubInfo(clubId, clubName, clubSlogan, description);
+        clubService.changeClubInfo(clubId, clubName, clubSlogan, description, clubImgUrl);
         return ResponseEntity.ok(new ResponseMessage("동아리 정보가 성공적으로 변경되었습니다."));
+    }
+
+    // 동아리 삭제
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/clubs/{clubId}/deleteClub")
+    public ResponseEntity<?> deleteMember(@PathVariable("clubId") Long clubId,
+                                          Authentication auth) {
+        // 회원 상태 가져오기
+        CustonUser user = (CustonUser) auth.getPrincipal();
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
+        if (status != MemberStatus.CLUB_PRESIDENT) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+        }
+
+        // 동아리 삭제
+        clubService.deleteClub(clubId);
+        return ResponseEntity.ok("동아리를 삭제했습니다.");
     }
 }
 

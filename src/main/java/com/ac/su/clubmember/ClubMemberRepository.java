@@ -13,4 +13,7 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, ClubMemb
     //     findByMember(Long memberId);
     List<ClubMember> findByClubId(Long clubId);
     boolean existsById(ClubMemberId clubMemberId);
+
+    // 특정 등급의 동아리 회원을 검색하는 메소드
+    ClubMember findByClubIdAndStatus(Long clubId, MemberStatus status);
 }
