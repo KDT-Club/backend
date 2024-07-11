@@ -1,5 +1,6 @@
 package com.ac.su.community.club;
 
+import com.ac.su.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,9 +14,10 @@ public class ClubDTO {
     private String clubName;
     private String description;
     private String category;
-    private Long memberId;
+    private Long member;
     @CreationTimestamp
     private LocalDateTime createdAt;
     private String clubImgUrl;
+    private String clubSlogan;
 
 }
