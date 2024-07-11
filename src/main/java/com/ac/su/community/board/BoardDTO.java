@@ -1,9 +1,11 @@
 package com.ac.su.community.board;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 public class BoardDTO {
     // Getters and setters
@@ -22,23 +24,4 @@ public class BoardDTO {
         this.memberId = memberId;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
 }
