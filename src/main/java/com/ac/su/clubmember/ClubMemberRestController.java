@@ -1,6 +1,7 @@
 package com.ac.su.clubmember;
 
 import com.ac.su.ResponseMessage;
+import com.ac.su.member.CustonUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/clubs")
+@RequestMapping("/clubs")
 public class ClubMemberRestController {
     private final ClubMemberService clubMemberService;
     private final ClubMemberRepository clubMemberRepository;
@@ -41,6 +42,7 @@ public class ClubMemberRestController {
                                           @RequestParam("status") MemberStatus status,
                                           @RequestParam("changeStatus") MemberStatus changeStatus,
                                           Authentication auth) {
+        CustonUser user = (CustonUser) auth.getPrincipal();
         // 동아리 회장이 아닐 때
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -48,7 +50,7 @@ public class ClubMemberRestController {
         // 동아리 회장일 때
         // PathVariable로 받은 동아리의 회장인지 검사
         else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
+            if (!clubMemberService.existsById(user.getId(), clubId))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
@@ -64,6 +66,7 @@ public class ClubMemberRestController {
                                           @PathVariable("clubId") Long clubId,
                                           @RequestParam("status") MemberStatus status,
                                           Authentication auth) {
+        CustonUser user = (CustonUser) auth.getPrincipal();
         // 동아리 회장이 아닐 때
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -71,7 +74,7 @@ public class ClubMemberRestController {
         // 동아리 회장일 때
         // PathVariable로 받은 동아리의 회장인지 검사
         else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
+            if (!clubMemberService.existsById(user.getId(), clubId))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 

@@ -1,8 +1,14 @@
 package com.ac.su.community.club;
 
 import com.ac.su.clubmember.ClubMember;
+import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberRepository;
+import com.ac.su.clubmember.MemberStatus;
+import com.ac.su.member.Member;
+import com.ac.su.member.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
@@ -12,9 +18,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 생성해주는 Lombok 어노테이션
 public class ClubService {
 
+    @Autowired
+    private MemberRepository memberRepository; // Member 객체에 대한 데이터베이스 입출력 함수
+
+    @Autowired
     private final ClubRepository clubRepository; // Club 객체에 대한 데이터베이스 입출력 함수
     private final ClubMemberRepository clubMemberRepository; // ClubMember 객체에 대한 데이터베이스 입출력 함수
 
@@ -34,7 +45,8 @@ public class ClubService {
                         club.getCategory(),
                         club.getMember().getId(), // 클럽 회원의 ID
                         club.getCreatedAt(),
-                        club.getClubImgUrl()
+                        club.getClubImgUrl(),
+                        club.getClubSlogan()
                 ))
                 .collect(Collectors.toList()); // List<ClubDTO>로 변환
         return ResponseEntity.ok(responseDTOs); // 변환된 DTO 리스트를 응답으로 반환
@@ -64,9 +76,62 @@ public class ClubService {
                     club.getCategory(),
                     clubMember.getMember().getId(),
                     club.getCreatedAt(),
-                    club.getClubImgUrl()
+                    club.getClubImgUrl(),
+                    club.getClubSlogan()
             );
             return ResponseEntity.ok(responseDTO); // 변환된 DTO를 응답으로 반환
         }
+
+    }
+    // 클럽 생성
+    public Club createClub(ClubDTO request,Long memberId) {
+
+        // 클럽 생성 요청을 받아서 클럽 객체를 생성
+        Club club = new Club();
+        club.setName(request.getClubName());
+        club.setDescription(request.getDescription());
+        club.setCategory(request.getCategory());
+        club.setClubImgUrl(request.getClubImgUrl());
+        club.setClubSlogan(request.getClubSlogan());
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()
+                -> new RuntimeException("멤버 찾을수 없음"));
+        club.setMember(member);// 클럽 생성 시 클럽 회장 지정
+
+        // 클럽 데이터를 데이터베이스에 저장하고 저장된 객체를 받아옴
+        Club savedClub = clubRepository.save(club);
+
+        // ClubMemberId 생성
+        ClubMemberId clubMemberId = new ClubMemberId();
+        clubMemberId.setClubId(savedClub.getId()); // 클럽 ID 저장된 clubId 가져옴
+        clubMemberId.setMemberId(memberId); // 멤버 ID 저장된 memberId 가져옴
+
+        // ClubMember 엔티티 생성 및 설정
+        ClubMember clubMember = new ClubMember();
+        clubMember.setId(clubMemberId);
+        clubMember.setClub(savedClub);
+        clubMember.setMember(member);
+        clubMember.setStatus(MemberStatus.CLUB_PRESIDENT); // 멤버 상태 클럽 회장으로 설정
+
+        clubMemberRepository.save(clubMember); // ClubMember 데이터를 데이터베이스에 저장
+
+        return savedClub;
+
+    }
+
+    // 특정 clubId로 클럽 데이터를 조회
+    public ClubDTO getClubByClubId(Long clubId) {
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동아리입니다."));
+        return ClubDTO.toClubDTO(club);
+    }
+
+    // 동아리 정보 수정
+    public void changeClubInfo(Long clubId, String clubName, String clubSlogan, String description) {
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
+        club.setName(clubName);
+        club.setClubSlogan(clubSlogan);
+        club.setDescription(description);
+
+        clubRepository.save(club);
     }
 }

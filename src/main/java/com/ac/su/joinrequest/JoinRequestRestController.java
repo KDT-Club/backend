@@ -3,6 +3,7 @@ package com.ac.su.joinrequest;
 import com.ac.su.ResponseMessage;
 import com.ac.su.clubmember.ClubMemberService;
 import com.ac.su.clubmember.MemberStatus;
+import com.ac.su.member.CustonUser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/clubs")
+@RequestMapping("/clubs")
 public class JoinRequestRestController {
     private final JoinRequestService joinRequestService;
     private final ClubMemberService clubMemberService;
@@ -29,6 +30,7 @@ public class JoinRequestRestController {
             @PathVariable("clubId") Long clubId,
             @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        CustonUser user = (CustonUser) auth.getPrincipal();
         // 동아리 회장이 아닐 때
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -36,7 +38,7 @@ public class JoinRequestRestController {
         // 동아리 회장일 때
         // PathVariable로 받은 동아리의 회장인지 검사
         else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
+            if (!clubMemberService.existsById(user.getId(), clubId))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
@@ -53,6 +55,7 @@ public class JoinRequestRestController {
             @PathVariable("requestId") Long requestId,
             @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        CustonUser user = (CustonUser) auth.getPrincipal();
         // 동아리 회장이 아닐 때
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -60,7 +63,7 @@ public class JoinRequestRestController {
         // 동아리 회장일 때
         // PathVariable로 받은 동아리의 회장인지 검사
         else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
+            if (!clubMemberService.existsById(user.getId(), clubId))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
@@ -78,6 +81,7 @@ public class JoinRequestRestController {
             @RequestParam("memberId") Long memberId,
             @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        CustonUser user = (CustonUser) auth.getPrincipal();
         // 동아리 회장이 아닐 때
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -85,7 +89,7 @@ public class JoinRequestRestController {
         // 동아리 회장일 때
         // PathVariable로 받은 동아리의 회장인지 검사
         else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
+            if (!clubMemberService.existsById(user.getId(), clubId))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
@@ -102,6 +106,7 @@ public class JoinRequestRestController {
             @PathVariable("clubId") Long clubId,
             @RequestParam("status") MemberStatus status,
             Authentication auth) {
+        CustonUser user = (CustonUser) auth.getPrincipal();
         // 동아리 회장이 아닐 때
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
@@ -109,7 +114,7 @@ public class JoinRequestRestController {
         // 동아리 회장일 때
         // PathVariable로 받은 동아리의 회장인지 검사
         else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
+            if (!clubMemberService.existsById(user.getId(), clubId))
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
