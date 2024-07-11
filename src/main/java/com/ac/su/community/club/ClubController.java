@@ -36,7 +36,7 @@ public class ClubController {
     }
 
     // 동아리 생성
-    @PostMapping("/clubs/{memberId}")
+    @PostMapping("/clubs/create/{memberId}")
         public ResponseEntity<?> createClub(@PathVariable Long memberId, @RequestBody ClubDTO clubDTO) {
         Club createdClub = clubService.createClub(clubDTO,memberId);
         if (createdClub == null) {
