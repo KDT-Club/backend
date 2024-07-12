@@ -1,6 +1,7 @@
 package com.ac.su.clubmember;
 
 import com.ac.su.ResponseMessage;
+import com.ac.su.member.CustonUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/clubs")
+@RequestMapping("/clubs")
 public class ClubMemberRestController {
     private final ClubMemberService clubMemberService;
     private final ClubMemberRepository clubMemberRepository;
@@ -38,21 +39,22 @@ public class ClubMemberRestController {
     @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
     public ResponseEntity<?> changeStatus(@PathVariable("memberId") Long memberId,
                                           @PathVariable("clubId") Long clubId,
-                                          @RequestParam("status") MemberStatus status,
                                           @RequestParam("changeStatus") MemberStatus changeStatus,
                                           Authentication auth) {
-        // 동아리 회장이 아닐 때
+        // 회원 상태 가져오기
+        CustonUser user = (CustonUser) auth.getPrincipal();
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
-        }
-        // 동아리 회장일 때
-        // PathVariable로 받은 동아리의 회장인지 검사
-        else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 회원 상태 수정
+        // 회원 상태를 회장으로 변경할시 기존에 있던 회장이 일반회원으로 변경됨
+        if(changeStatus == MemberStatus.CLUB_PRESIDENT) {
+            clubMemberService.delegatePresident(clubId);
+        }
         clubMemberService.changeStatus(memberId, clubId, changeStatus);
         return ResponseEntity.ok("회원 등급이 성공적으로 변경되었습니다.");
     }
@@ -62,21 +64,43 @@ public class ClubMemberRestController {
     @PostMapping("/{clubId}/clubMember/{memberId}/deleteMember")
     public ResponseEntity<?> deleteMember(@PathVariable("memberId") Long memberId,
                                           @PathVariable("clubId") Long clubId,
-                                          @RequestParam("status") MemberStatus status,
                                           Authentication auth) {
-        // 동아리 회장이 아닐 때
+        // 회원 상태 가져오기
+        CustonUser user = (CustonUser) auth.getPrincipal();
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
-        }
-        // 동아리 회장일 때
-        // PathVariable로 받은 동아리의 회장인지 검사
-        else {
-            if (!clubMemberService.existsById(Long.valueOf(auth.getName()), clubId))
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
         // 회원 삭제
-        clubMemberService.deleteMember(memberId, clubId);
-        return ResponseEntity.ok("회원을 탈퇴시켰습니다.");
+        // 삭제하려는 회원이 회장일시 삭제 불가능
+        MemberStatus targetStatus = clubMemberService.getMemberStatus(new ClubMemberId(memberId, clubId));
+        if (targetStatus == MemberStatus.CLUB_PRESIDENT) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장 위임 후 탈퇴 가능합니다."));
+        } else {
+            clubMemberService.deleteMember(memberId, clubId);
+            return ResponseEntity.ok("회원을 탈퇴시켰습니다.");
+        }
+    }
+
+    // 회원이 자기 의지를 가지고 탈퇴
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{clubId}/withdrawClub")
+    public ResponseEntity<?> deleteMember(@PathVariable("clubId") Long clubId,
+                                          Authentication auth) {
+        // 회원 상태 가져오기
+        CustonUser user = (CustonUser) auth.getPrincipal();
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장일시 위임 후 탈퇴 가능
+        if (status == MemberStatus.CLUB_PRESIDENT) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장 위임 후 탈퇴 가능합니다."));
+        }
+
+        // 회원 탈퇴
+        clubMemberService.deleteMember(user.getId(), clubId);
+        return ResponseEntity.ok("동아리를 성공적으로 탈퇴했습니다.");
     }
 }

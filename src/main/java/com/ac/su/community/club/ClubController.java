@@ -1,10 +1,18 @@
 package com.ac.su.community.club;
 
+
+import com.ac.su.ResponseMessage;
+import com.ac.su.clubmember.*;
+import com.ac.su.member.CustonUser;
 import com.ac.su.clubmember.ClubMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
 @RestController
@@ -14,6 +22,7 @@ public class ClubController {
     private final ClubRepository clubRepository; //Club 객체에 대한 입출력 함수
     private final ClubMemberRepository clubMemberRepository; //ClubMember 객체에 대한 입출력 함수
     private final ClubService clubService;
+    private final ClubMemberService clubMemberService;
 
     // 설명: 모든 동아리 정보를 불러온다
     @GetMapping("/clubs")
@@ -44,6 +53,74 @@ public class ClubController {
         } else {
             return  ResponseEntity.status(HttpStatus.OK).body("클럽 생성 성공");
         }
+    }
+
+    // 동아리 정보 불러옴(GET)
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/clubs/{clubId}/changeClubInfo")
+    public ResponseEntity<?> getClubInfo(@PathVariable("clubId") Long clubId,
+                                         Authentication auth) {
+        // 회원 상태 가져오기
+        CustonUser user = (CustonUser) auth.getPrincipal();
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
+        if (status != MemberStatus.CLUB_PRESIDENT) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+        }
+
+        // 동아리 정보 불러옴
+        ClubDTO clubDTO = clubService.getClubByClubId(clubId);
+        return ResponseEntity.ok(clubDTO);
+    }
+
+    // 동아리 상태 수정(POST)
+    @PostAuthorize("isAuthenticated()")
+    @PostMapping("/clubs/{clubId}/changeClubInfo")
+    public ResponseEntity<?> changeStatus(@PathVariable("clubId") Long clubId,
+                                          @RequestParam("clubName") String clubName,
+                                          @RequestParam("clubSlogan") String clubSlogan,
+                                          @RequestParam("description") String description,
+                                          @RequestParam("clubImgUrl") String clubImgUrl) {
+        // 현재 저장되어 있는 동아리 정보 받아옴
+        ClubDTO existingClubInfo = clubService.getClubByClubId(clubId);
+
+        // 사용자가 수정한 값이 없는 경우 기존 정보 그대로 반영
+        if (clubName.isEmpty()) {
+            clubName = existingClubInfo.getClubName();
+        }
+        if (clubSlogan.isEmpty()) {
+            clubSlogan = existingClubInfo.getClubSlogan();
+        }
+        if (description.isEmpty()) {
+            description = existingClubInfo.getDescription();
+        }
+        if (clubImgUrl.isEmpty()) {
+            clubImgUrl = existingClubInfo.getDescription();
+        }
+
+        // 동아리 정보 변경
+        clubService.changeClubInfo(clubId, clubName, clubSlogan, description, clubImgUrl);
+        return ResponseEntity.ok(new ResponseMessage("동아리 정보가 성공적으로 변경되었습니다."));
+    }
+
+    // 동아리 삭제
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/clubs/{clubId}/deleteClub")
+    public ResponseEntity<?> deleteMember(@PathVariable("clubId") Long clubId,
+                                          Authentication auth) {
+        // 회원 상태 가져오기
+        CustonUser user = (CustonUser) auth.getPrincipal();
+        MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+        // 동아리 회장이 아닌 경우 접근 금지
+        if (status != MemberStatus.CLUB_PRESIDENT) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+        }
+
+        // 동아리 삭제
+        clubService.deleteClub(clubId);
+        return ResponseEntity.ok("동아리를 삭제했습니다.");
     }
 }
 
