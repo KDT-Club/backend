@@ -4,6 +4,7 @@ import com.ac.su.clubmember.ClubMember;
 import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberRepository;
 import com.ac.su.clubmember.MemberStatus;
+import com.ac.su.joinrequest.JoinRequestRepository;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -22,12 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 생성해주는 Lombok 어노테이션
 public class ClubService {
 
-    @Autowired
-    private MemberRepository memberRepository; // Member 객체에 대한 데이터베이스 입출력 함수
-
-    @Autowired
+    private final MemberRepository memberRepository; // Member 객체에 대한 데이터베이스 입출력 함수
     private final ClubRepository clubRepository; // Club 객체에 대한 데이터베이스 입출력 함수
     private final ClubMemberRepository clubMemberRepository; // ClubMember 객체에 대한 데이터베이스 입출력 함수
+    private final JoinRequestRepository joinRequestRepository;
 
     /**
      * 모든 클럽 데이터를 가져와서 클라이언트에게 반환합니다.
@@ -138,7 +137,16 @@ public class ClubService {
 
     // 동아리 삭제
     public void deleteClub(Long clubId) {
+        // @OnDelete(action = OnDeleteAction.CASCADE)가 안먹혀서 강경 수단 취함..
+        // clubId를 참조하고 있는 clubMember 삭제
+        clubMemberRepository.deleteByClubId(clubId);
+        clubMemberRepository.flush();
+        // clubId를 참조하고 있는 joinRequest 삭제
+        joinRequestRepository.deleteByClubId(clubId);
+        joinRequestRepository.flush();
+        // clubId를 참조하고 있는 club 삭제
         clubRepository.deleteById(clubId);
+        clubRepository.flush();
     }
 }
 

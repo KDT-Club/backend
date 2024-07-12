@@ -16,4 +16,7 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, ClubMemb
 
     // 특정 등급의 동아리 회원을 검색하는 메소드
     ClubMember findByClubIdAndStatus(Long clubId, MemberStatus status);
+
+    // 동아리 id로 동아리 회원 삭제하는 메소드
+    void deleteByClubId(Long clubId);
 }
