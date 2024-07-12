@@ -100,17 +100,17 @@
     </script>
 </head>
 <body>
-<h1 th:text="${boardId == 1 ? '커뮤니티 자유게시판' : (boardId == 2 ? '동아리 공지게시판' : (boardId == 3 ? '동아리 활동게시판' : '동아리 내부 자유게시판'))}">게시판</h1>
-<form th:action="@{'/board/' + ${boardId} + (boardId == 3 ? '/club/' + ${clubId} : '') + '/posts'}" method="post" th:object="${postDTO}" enctype="multipart/form-data">
+<h1 th:text="${boardId == 1 ? '커뮤니티 자유게시판' : (boardId == 2 ? '동아리 공지게시판' : (boardId == 3 ? '동아리 활동게시판' : '동아리 내부 자유게시판'))}"></h1>
+<form th:action="@{'/club/' + ${clubId} + '/board/' + ${boardId} + '/posts'}" method="post" th:object="${postDTO}" enctype="multipart/form-data">
     <label for="title">Title:</label><br>
     <input type="text" id="title" name="title" th:field="*{title}" required><br><br>
 
     <label for="content">Content:</label><br>
     <textarea id="content" name="content" th:field="*{content}" required></textarea><br><br>
 
-    <div th:if="${boardId == 3}">
+    <div th:if="${boardId == 2 || boardId == 3}">
         <label for="clubName">Club Name:</label><br>
-        <input type="text" id="clubName" name="clubName" th:value="${clubName}" readonly><br><br>
+        <input type="text" id="clubName" name="clubName" th:field="*{clubName}" readonly><br><br>
     </div>
 
     <label>Attachment:</label><br>

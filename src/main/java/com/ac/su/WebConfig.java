@@ -1,4 +1,4 @@
-package com.ac.su.config;
+package com.ac.su;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

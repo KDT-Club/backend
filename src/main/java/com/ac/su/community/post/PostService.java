@@ -30,7 +30,7 @@ public class PostService {
     @Value("${file.upload-url}")
     private String uploadUrl;
 
-    public void createPost(PostDTO postDTO, Member member, Long boardId) {
+    public void createPost(PostDTO postDTO, Member member, Long boardId, Long clubId) {
         Post post = new Post();
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
@@ -39,8 +39,11 @@ public class PostService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Invalid board Id: " + boardId));
         post.setBoard(board);
 
-        if (boardId == 3) {
-            post.setClubName(member.getManagedClub() != null ? member.getManagedClub().getName() : "");
+        if (boardId == 2 || boardId == 3) {
+            if (member.getManagedClub() == null || !member.getManagedClub().getId().equals(clubId)) {
+                throw new IllegalArgumentException("You do not have permission to create a post in this club.");
+            }
+            post.setClubName(member.getManagedClub().getName());
         }
 
 

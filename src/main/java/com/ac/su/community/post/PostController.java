@@ -15,57 +15,106 @@ public class PostController {
     private final PostService postService;
     private final MemberRepository memberRepository;
 
-    // 자유게시판
-    @GetMapping("/board/{boardId}/posts")
-    public String createPostForm(@PathVariable Long boardId, Model model, @AuthenticationPrincipal User user) {
+    // 자유 게시판 글 작성 폼
+    @GetMapping("/board/1/posts")
+    public String createGeneralPostForm(Model model, @AuthenticationPrincipal User user) {
         // 하드코딩된 사용자 정보를 사용
         int studentId = 111111; // 예시로 사용될 하드코딩된 studentId
-        Member member = memberRepository.findByStudentId(studentId).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        Member member = memberRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
 
         model.addAttribute("postDTO", new PostDTO());
-        model.addAttribute("boardId", boardId);
+        model.addAttribute("boardId", 1L);
+
         return "CreatePost";
     }
 
-    @PostMapping("/board/{boardId}/posts")
-    public String createPost(@PathVariable Long boardId, @ModelAttribute PostDTO postDTO, @AuthenticationPrincipal User user) {
+    // 자유 게시판 글 작성 처리
+    @PostMapping("/board/1/posts")
+    public String createGeneralPost(@ModelAttribute PostDTO postDTO, @AuthenticationPrincipal User user) {
         // 하드코딩된 사용자 정보를 사용
         int studentId = 111111; // 예시로 사용될 하드코딩된 studentId
-        Member member = memberRepository.findByStudentId(studentId).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        Member member = memberRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
 
-        postService.createPost(postDTO, member, boardId);
-        return "redirect:/board/" + boardId + "/posts"; // 게시글 작성 후 게시글 목록으로 리다이렉트
+        postService.createPost(postDTO, member, 1L, null);
+
+        return "redirect:/board/1/posts";
     }
 
-    // 활동게시판
-    @GetMapping("/board/{boardId}/club/{clubId}/posts")
-    public String createClubPostForm(@PathVariable Long boardId, @PathVariable Long clubId, Model model, @AuthenticationPrincipal User user) {
+    // 동아리 활동 게시판 글 작성 폼
+    @GetMapping("/board/3/club/{clubId}/posts")
+    public String createActivityPostForm(@PathVariable Long clubId, Model model, @AuthenticationPrincipal User user) {
         // 하드코딩된 사용자 정보를 사용
         int studentId = 111111; // 예시로 사용될 하드코딩된 studentId
-        Member member = memberRepository.findByStudentId(studentId).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        Member member = memberRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
 
+        // 동아리장인지 확인
         if (member.getManagedClub() == null || !member.getManagedClub().getId().equals(clubId)) {
             throw new IllegalArgumentException("You do not have permission to create a post in this club.");
         }
 
-        model.addAttribute("postDTO", new PostDTO());
-        model.addAttribute("boardId", boardId);
+        PostDTO postDTO = new PostDTO();
+        postDTO.setClubName(member.getManagedClub().getName());
+
+        model.addAttribute("postDTO", postDTO);
+        model.addAttribute("boardId", 3L);
         model.addAttribute("clubId", clubId);
-        model.addAttribute("clubName", member.getManagedClub().getName());
+
         return "CreatePost";
     }
 
-    @PostMapping("/board/{boardId}/club/{clubId}/posts")
-    public String createClubPost(@PathVariable Long boardId, @PathVariable Long clubId, @ModelAttribute PostDTO postDTO, @AuthenticationPrincipal User user) {
+    // 동아리 활동 게시판 글 작성 처리
+    @PostMapping("/board/3/club/{clubId}/posts")
+    public String createActivityPost(@PathVariable Long clubId, @ModelAttribute PostDTO postDTO, @AuthenticationPrincipal User user) {
         // 하드코딩된 사용자 정보를 사용
         int studentId = 111111; // 예시로 사용될 하드코딩된 studentId
-        Member member = memberRepository.findByStudentId(studentId).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        Member member = memberRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
 
+        postService.createPost(postDTO, member, 3L, clubId);
+
+        return "redirect:/board/3/club/" + clubId + "/posts";
+    }
+
+    // 동아리 공지사항 게시판 글 작성 폼
+    @GetMapping("/club/{clubId}/board/2/posts")
+    public String createNoticePostForm(@PathVariable Long clubId, Model model, @AuthenticationPrincipal User user) {
+        // 하드코딩된 사용자 정보를 사용
+        int studentId = 111111; // 예시로 사용될 하드코딩된 studentId
+        Member member = memberRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+
+        // 동아리장인지 확인
         if (member.getManagedClub() == null || !member.getManagedClub().getId().equals(clubId)) {
             throw new IllegalArgumentException("You do not have permission to create a post in this club.");
         }
 
-        postService.createPost(postDTO, member, boardId);
-        return "redirect:/board/" + boardId + "/club/" + clubId + "/posts"; // 게시글 작성 후 게시글 목록으로 리다이렉트
+        PostDTO postDTO = new PostDTO();
+        postDTO.setClubName(member.getManagedClub().getName());
+
+        model.addAttribute("postDTO", postDTO);
+        model.addAttribute("boardId", 2L);
+        model.addAttribute("clubId", clubId);
+
+        return "CreatePost";
     }
+
+    // 동아리 공지사항 게시판 글 작성 처리
+    @PostMapping("/club/{clubId}/board/2/posts")
+    public String createNoticePost(@PathVariable Long clubId, @ModelAttribute PostDTO postDTO, @AuthenticationPrincipal User user) {
+        // 하드코딩된 사용자 정보를 사용
+        int studentId = 111111; // 예시로 사용될 하드코딩된 studentId
+        Member member = memberRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+
+        postService.createPost(postDTO, member, 2L, clubId);
+
+        return "redirect:/club/" + clubId + "/board/2/posts";
+    }
+
+
+    // 동아리 내 자유 게시판 글 작성 폼
+
 }
