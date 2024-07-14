@@ -34,4 +34,8 @@ public class Club {
 
     @OneToMany(mappedBy = "club")
     private List<ClubMember> members; // 동아리 회원들
+
+    public String getName() {
+        return name;
+    }
 }

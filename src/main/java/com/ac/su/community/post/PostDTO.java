@@ -1,6 +1,5 @@
 package com.ac.su.community.post;
 
-import com.ac.su.community.attachment.AttachmentFlag;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -8,10 +7,9 @@ import java.util.List;
 public class PostDTO {
     private String title;
     private String content;
-    private List<MultipartFile> attachments;
-    private AttachmentFlag attachmentFlag = AttachmentFlag.N;
+    private String attachmentFlag; // "Y" 또는 "N"으로 설정
     private String clubName;
-    private List<String> attachmentUrls;
+    private List<MultipartFile> attachmentNames; // 첨부 파일 리스트
 
     // Getters and Setters
     public String getTitle() {
@@ -30,22 +28,13 @@ public class PostDTO {
         this.content = content;
     }
 
-    public List<MultipartFile> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<MultipartFile> attachments) {
-        this.attachments = attachments;
-    }
-
-    public AttachmentFlag getAttachmentFlag() {
+    public String getAttachmentFlag() {
         return attachmentFlag;
     }
 
-    public void setAttachmentFlag(AttachmentFlag attachmentFlag) {
+    public void setAttachmentFlag(String attachmentFlag) {
         this.attachmentFlag = attachmentFlag;
     }
-
 
     public String getClubName() {
         return clubName;
@@ -55,11 +44,11 @@ public class PostDTO {
         this.clubName = clubName;
     }
 
-    public List<String> getAttachmentUrls() {
-        return attachmentUrls;
+    public List<MultipartFile> getAttachmentNames() {
+        return attachmentNames;
     }
 
-    public void setAttachmentUrls(List<String> attachmentUrls) {
-        this.attachmentUrls = attachmentUrls;
+    public void setAttachmentNames(List<MultipartFile> attachmentNames) {
+        this.attachmentNames = attachmentNames;
     }
 }
