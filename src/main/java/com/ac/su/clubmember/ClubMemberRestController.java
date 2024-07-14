@@ -1,6 +1,7 @@
 package com.ac.su.clubmember;
 
 import com.ac.su.ResponseMessage;
+import com.ac.su.community.club.ClubService;
 import com.ac.su.member.CustonUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ClubMemberRestController {
     private final ClubMemberService clubMemberService;
     private final ClubMemberRepository clubMemberRepository;
+    private final ClubService clubService;
 
     // 동아리 id에 따른 동아리 회원 리스트 출력
     @GetMapping("/{clubId}/clubMember")
@@ -56,6 +58,7 @@ public class ClubMemberRestController {
             clubMemberService.delegatePresident(clubId);
         }
         clubMemberService.changeStatus(memberId, clubId, changeStatus);
+        clubService.changePresident(clubId, memberId);
         return ResponseEntity.ok("회원 등급이 성공적으로 변경되었습니다.");
     }
 

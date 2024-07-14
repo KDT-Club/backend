@@ -137,16 +137,18 @@ public class ClubService {
 
     // 동아리 삭제
     public void deleteClub(Long clubId) {
-        // @OnDelete(action = OnDeleteAction.CASCADE)가 안먹혀서 강경 수단 취함..
-        // clubId를 참조하고 있는 clubMember 삭제
-        clubMemberRepository.deleteByClubId(clubId);
-        clubMemberRepository.flush();
-        // clubId를 참조하고 있는 joinRequest 삭제
-        joinRequestRepository.deleteByClubId(clubId);
-        joinRequestRepository.flush();
-        // clubId를 참조하고 있는 club 삭제
         clubRepository.deleteById(clubId);
-        clubRepository.flush();
+    }
+
+    // 동아리 회장 수정
+    public void changePresident(Long clubId, Long memberId) {
+        // 회장이 변경될 동아리 정보 받아옴
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동아리입니다."));
+        // 위임 되는 회장의 정보 받아옴
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        // 동아리 회장 수정
+        club.setMember(member);
+        clubRepository.save(club);
     }
 }
 
