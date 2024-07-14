@@ -119,9 +119,9 @@ public class ClubService {
     }
 
     // 특정 clubId로 클럽 데이터를 조회
-    public ClubDTO getClubByClubId(Long clubId) {
+    public ClubInfoDTO getClubByClubId(Long clubId) {
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동아리입니다."));
-        return ClubDTO.toClubDTO(club);
+        return ClubInfoDTO.toClubInfoDTO(club);
     }
 
     // 동아리 정보 수정

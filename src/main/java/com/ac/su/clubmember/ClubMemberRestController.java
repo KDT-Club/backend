@@ -41,7 +41,7 @@ public class ClubMemberRestController {
     @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
     public ResponseEntity<?> changeStatus(@PathVariable("memberId") Long memberId,
                                           @PathVariable("clubId") Long clubId,
-                                          @RequestParam("changeStatus") MemberStatus changeStatus,
+                                          @RequestBody MemberStatusDTO statusDTO,
                                           Authentication auth) {
         // 회원 상태 가져오기
         CustonUser user = (CustonUser) auth.getPrincipal();
@@ -50,6 +50,14 @@ public class ClubMemberRestController {
         // 동아리 회장이 아닌 경우 접근 금지
         if (status != MemberStatus.CLUB_PRESIDENT) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
+        }
+
+        // 잘못된 회원 등급을 입력했을때
+        MemberStatus changeStatus;
+        try {
+            changeStatus = MemberStatus.valueOf(statusDTO.getChangeStatus());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ResponseMessage("잘못된 회원 등급"));
         }
 
         // 회원 상태 수정
