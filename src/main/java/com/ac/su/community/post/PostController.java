@@ -30,4 +30,29 @@ public class PostController {
         return postService.getPostsByMemberId(memberId);
     }
 
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        boolean isDeleted = postService.deletePost(postId);
+        if (isDeleted) {
+            return ResponseEntity.ok("{\"message\":\"성공\"}");
+        } else {
+            return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
+        }
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
+        Optional<Post> updatedPost = postService.updatePost(postId, postUpdateDto);
+        if (updatedPost.isPresent()) {
+            Post post = updatedPost.get();
+            return ResponseEntity.ok("{\"postId\":\"" + post.getId() + "\","
+                    + "\"title\":\"" + post.getTitle() + "\","
+                    + "\"content\":\"" + post.getContent() + "\","
+                    + "\"attachment_flag\":\"" + post.getAttachmentFlag() + "\","
+                    + "\"attachment_name\":\"" + postUpdateDto.getAttachmentName() + "\"}");
+        } else {
+            return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
+        }
+    }
+
 }
