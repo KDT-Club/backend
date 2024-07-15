@@ -4,6 +4,7 @@ import com.ac.su.comment.Comment;
 import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.community.board.Board;
 import com.ac.su.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
