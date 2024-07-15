@@ -60,7 +60,8 @@ public class JoinRequestService {
 
     // 동아리 id로 동아리 지원서 전체 검색
     public List<JoinRequestDTO> findRequestByClubId(Long clubId) {
-        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubIdAndStatus(clubId, RequestStatus.WAITING);
+//        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubIdAndStatus(clubId, RequestStatus.WAITING);
+        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubId(clubId);
         // 동아리 지원서가 한 개도 없을 때 빈 리스트 반환
         if(joinRequestList.isEmpty()){
             return new ArrayList<>();
@@ -81,10 +82,12 @@ public class JoinRequestService {
 
     // 가입 승인
     public void approveRequest(Long requestId, Long clubId, Long memberId) {
-        JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
-        // 지원서 상태 WAITING -> APPROVED
-        joinRequest.setStatus(RequestStatus.APPROVED);
-        joinRequestRepository.save(joinRequest);
+//        JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
+//        // 지원서 상태 WAITING -> APPROVED
+//        joinRequest.setStatus(RequestStatus.APPROVED);
+//        joinRequestRepository.save(joinRequest);
+        // 가입 승인 후 DB에서 지원서 제거
+        joinRequestRepository.deleteById(requestId);
 
         Club club = clubRepository.findById(clubId).orElseThrow();
         Member member = memberRepository.findById(memberId).orElseThrow();
@@ -94,11 +97,18 @@ public class JoinRequestService {
         clubMember.setClub(club);
         clubMember.setMember(member);
         clubMember.setId(new ClubMemberId(clubId, memberId));
+        clubMember.setStatus(MemberStatus.CLUB_MEMBER);
         clubMemberRepository.save(clubMember);
     }
 
     // 가입 거절
     public void denyRequest(Long requestId) {
         joinRequestRepository.deleteById(requestId);
+    }
+
+    // 지원서를 작성한 회원 id 검색하는 메소드
+    public Long getMemberIdByRequestId(Long requestId) {
+        JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
+        return joinRequest.getMember().getId();
     }
 }

@@ -4,6 +4,7 @@ import com.ac.su.clubmember.ClubMember;
 import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberRepository;
 import com.ac.su.clubmember.MemberStatus;
+import com.ac.su.joinrequest.JoinRequestRepository;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -22,12 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 생성해주는 Lombok 어노테이션
 public class ClubService {
 
-    @Autowired
-    private MemberRepository memberRepository; // Member 객체에 대한 데이터베이스 입출력 함수
-
-    @Autowired
+    private final MemberRepository memberRepository; // Member 객체에 대한 데이터베이스 입출력 함수
     private final ClubRepository clubRepository; // Club 객체에 대한 데이터베이스 입출력 함수
     private final ClubMemberRepository clubMemberRepository; // ClubMember 객체에 대한 데이터베이스 입출력 함수
+    private final JoinRequestRepository joinRequestRepository;
 
     /**
      * 모든 클럽 데이터를 가져와서 클라이언트에게 반환합니다.
@@ -117,7 +116,39 @@ public class ClubService {
 
         return savedClub;
 
-       }
-
     }
+
+    // 특정 clubId로 클럽 데이터를 조회
+    public ClubInfoDTO getClubByClubId(Long clubId) {
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동아리입니다."));
+        return ClubInfoDTO.toClubInfoDTO(club);
+    }
+
+    // 동아리 정보 수정
+    public void changeClubInfo(Long clubId, String clubName, String clubSlogan, String description, String clubImgUrl) {
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("동아리에 가입되지 않은 회원입니다."));
+        club.setName(clubName);
+        club.setClubSlogan(clubSlogan);
+        club.setDescription(description);
+        club.setClubImgUrl(clubImgUrl);
+
+        clubRepository.save(club);
+    }
+
+    // 동아리 삭제
+    public void deleteClub(Long clubId) {
+        clubRepository.deleteById(clubId);
+    }
+
+    // 동아리 회장 수정
+    public void changePresident(Long clubId, Long memberId) {
+        // 회장이 변경될 동아리 정보 받아옴
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동아리입니다."));
+        // 위임 되는 회장의 정보 받아옴
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        // 동아리 회장 수정
+        club.setMember(member);
+        clubRepository.save(club);
+    }
+}
 
