@@ -31,7 +31,7 @@ public class Club {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private CategoryStatus Category;
+    private ClubType Category;
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 날짜
