@@ -29,42 +29,43 @@ public class JoinRequestController {
         return message;
     }
 
-    // 동아리 id에 따른 동아리 지원서 리스트 출력
-    @GetMapping("/{clubId}/joinRequest")
-    public String joinRequestList(@PathVariable("clubId") Long requestId,
-                                 Model model) {
-        List<JoinRequestDTO> joinRequestDTOList = joinRequestService.findRequestByClubId(requestId);
-        model.addAttribute("joinRequestList", joinRequestDTOList);
-        return "join_request_list";
-    }
-
-    // 동아리 지원서 상세 정보
-    @GetMapping("/{clubId}/joinRequest/{requestId}")
-    public String requestDetail(@PathVariable("requestId") Long requestId,
-                               Model model) {
-        JoinRequestDTO joinRequestDTO = joinRequestService.findByRequestId(requestId);
-        model.addAttribute("joinRequest", joinRequestDTO);
-        return "join_request_detail";
-    }
-
-    // 가입 승인
-    @PostMapping("/{clubId}/joinRequest/{requestId}/approveRequest")
-    public String approveRequest(@PathVariable("requestId") Long requestId,
-                                 @PathVariable("clubId") Long clubId,
-                                 @RequestParam("memberId") Long memberId) {
-        joinRequestService.approveRequest(requestId, clubId, memberId);
-        // 가입 승인 후 동아리 지원서 리스트로 리다이렉트
-        return "redirect:/clubs/" + clubId + "/joinRequest";
-    }
-
-    // 가입 거절
-    @PostMapping("/{clubId}/joinRequest/{requestId}/denyRequest")
-    public String denyRequest(@PathVariable("requestId") Long requestId,
-                              @PathVariable("clubId") Long clubId) {
-        joinRequestService.denyRequest(requestId);
-        // 가입 거절 후 회원 리스트로 리다이렉트
-        return "redirect:/clubs/" + clubId + "/joinRequest";
-    }
+    // 이 밑부터는 JoinRequestRestController 코드로 이동했습니다
+//    // 동아리 id에 따른 동아리 지원서 리스트 출력
+//    @GetMapping("/{clubId}/joinRequest")
+//    public String joinRequestList(@PathVariable("clubId") Long requestId,
+//                                 Model model) {
+//        List<JoinRequestDTO> joinRequestDTOList = joinRequestService.findRequestByClubId(requestId);
+//        model.addAttribute("joinRequestList", joinRequestDTOList);
+//        return "join_request_list";
+//    }
+//
+//    // 동아리 지원서 상세 정보
+//    @GetMapping("/{clubId}/joinRequest/{requestId}")
+//    public String requestDetail(@PathVariable("requestId") Long requestId,
+//                               Model model) {
+//        JoinRequestDTO joinRequestDTO = joinRequestService.findByRequestId(requestId);
+//        model.addAttribute("joinRequest", joinRequestDTO);
+//        return "join_request_detail";
+//    }
+//
+//    // 가입 승인
+//    @PostMapping("/{clubId}/joinRequest/{requestId}/approveRequest")
+//    public String approveRequest(@PathVariable("requestId") Long requestId,
+//                                 @PathVariable("clubId") Long clubId,
+//                                 @RequestParam("memberId") Long memberId) {
+//        joinRequestService.approveRequest(requestId, clubId, memberId);
+//        // 가입 승인 후 동아리 지원서 리스트로 리다이렉트
+//        return "redirect:/clubs/" + clubId + "/joinRequest";
+//    }
+//
+//    // 가입 거절
+//    @PostMapping("/{clubId}/joinRequest/{requestId}/denyRequest")
+//    public String denyRequest(@PathVariable("requestId") Long requestId,
+//                              @PathVariable("clubId") Long clubId) {
+//        joinRequestService.denyRequest(requestId);
+//        // 가입 거절 후 회원 리스트로 리다이렉트
+//        return "redirect:/clubs/" + clubId + "/joinRequest";
+//    }
 
     @Getter
     @Setter

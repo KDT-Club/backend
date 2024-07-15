@@ -1,5 +1,6 @@
 package com.ac.su.community.post;
 
+import com.ac.su.comment.Comment;
 import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.community.board.Board;
 import com.ac.su.member.Member;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,7 +21,7 @@ import java.time.LocalDateTime;
 @ToString
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-incremnet
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increasement
     @Column(name="post_id")
     private Long id;
     @Column
@@ -44,4 +47,7 @@ public class Post {
     @ManyToOne
     @JoinColumn(name="board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Board boardId;  //게시판 고유 번호
-}
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>(); // 초기화
+    }
