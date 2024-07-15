@@ -12,3 +12,4 @@ public class CommentDeleteResponseDTO {
         this.message = message;
     }
 }
+// 바보냐

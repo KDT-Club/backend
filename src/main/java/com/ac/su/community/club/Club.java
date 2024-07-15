@@ -1,6 +1,7 @@
 package com.ac.su.community.club;
 
 import com.ac.su.clubmember.ClubMember;
+import com.ac.su.community.board.BoardType;
 import com.ac.su.joinrequest.JoinRequest;
 import com.ac.su.member.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,6 +42,9 @@ public class Club {
 
     @Column
     private String clubSlogan;
+
+    @Enumerated(EnumType.STRING)
+    private ClubType clubType;
 
     // 동아리 회장 참조키
     @ManyToOne
