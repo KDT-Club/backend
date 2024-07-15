@@ -82,8 +82,17 @@ public class ClubService {
         }
 
     }
+
+    // 클럽 회장인지 확인
+    private boolean isMemberAlreadyPresident(Long memberId) {
+        return clubMemberRepository.existsByMemberIdAndStatus(memberId, MemberStatus.CLUB_PRESIDENT);
+
+    }
     // 클럽 생성
     public Club createClub(ClubDTO request,Long memberId) {
+        if (isMemberAlreadyPresident(memberId)) {
+            throw new RuntimeException("이 멤버는 이미 회장입니다.");
+        }
 
         // 클럽 생성 요청을 받아서 클럽 객체를 생성
         Club club = new Club();

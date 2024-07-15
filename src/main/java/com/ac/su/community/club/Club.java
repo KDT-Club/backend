@@ -30,8 +30,9 @@ public class Club {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(length=20, nullable = false)
-    private String category;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ClubType Category;
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 날짜
@@ -66,7 +67,6 @@ public class Club {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
                 ", createdAt=" + createdAt +
                 ", clubImgUrl='" + clubImgUrl + '\'' +
                 ", clubSlogan='" + clubSlogan + '\'' +
