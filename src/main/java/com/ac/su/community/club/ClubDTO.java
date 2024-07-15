@@ -17,7 +17,7 @@ public class ClubDTO {
     private Long clubId;
     private String clubName;
     private String description;
-    private ClubType category;
+    private ClubType clubType;
     private Long member;
     @CreationTimestamp
     private LocalDateTime createdAt;
