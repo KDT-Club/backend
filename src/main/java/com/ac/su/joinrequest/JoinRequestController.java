@@ -69,7 +69,7 @@ public class JoinRequestController {
 
     @Getter
     @Setter
-    class ApplicationRequest {
+    static class ApplicationRequest {
         private String clubName;
         private String motivation;
     }
