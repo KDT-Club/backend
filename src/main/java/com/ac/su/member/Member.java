@@ -5,6 +5,7 @@ import com.ac.su.comment.Comment;
 import com.ac.su.community.club.Club;
 import com.ac.su.community.post.Post;
 import com.ac.su.joinrequest.JoinRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,22 +42,27 @@ public class Member {
     @Column
     private String phone;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Club> clubs = new ArrayList<>();
 
     // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClubMember> clubMembers = new ArrayList<>();
 
     // 가입 요청과의 관계 설정 (cascade 옵션 추가)
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JoinRequest> joinRequests = new ArrayList<>();
 
     // 댓글과의 관계 설정 (cascade 옵션 추가)
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> Comment = new ArrayList<>();
 
     // 게시글과의 관계 설정 (cascade 옵션 추가)
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> Post = new ArrayList<>();
 
