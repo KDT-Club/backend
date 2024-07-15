@@ -47,10 +47,12 @@ public class Club {
 
     // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ClubMember> clubMembers = new ArrayList<>();
 
     // 가입 요청과의 관계 설정 (cascade 옵션 추가)
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<JoinRequest> joinRequests = new ArrayList<>();
 
     @Override
