@@ -5,6 +5,7 @@ import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberService;
 import com.ac.su.clubmember.MemberStatus;
 import com.ac.su.member.CustonUser;
+import com.ac.su.member.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.util.List;
 public class JoinRequestRestController {
     private final JoinRequestService joinRequestService;
     private final ClubMemberService clubMemberService;
+    private final JoinRequestRepository joinRequestRepository;
 
     // 동아리 id에 따른 동아리 지원서 리스트 출력
     @PreAuthorize("isAuthenticated()")
@@ -71,7 +73,6 @@ public class JoinRequestRestController {
     public ResponseEntity<?> approveRequest(
             @PathVariable("requestId") Long requestId,
             @PathVariable("clubId") Long clubId,
-            @RequestParam("memberId") Long memberId,
             Authentication auth) {
         // 회원 상태 가져오기
         CustonUser user = (CustonUser) auth.getPrincipal();
@@ -82,8 +83,9 @@ public class JoinRequestRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
         }
 
+        Long targetMemberId = joinRequestService.getMemberIdByRequestId(requestId);
         // 가입 승인
-        joinRequestService.approveRequest(requestId, clubId, memberId);
+        joinRequestService.approveRequest(requestId, clubId, targetMemberId);
         return ResponseEntity.ok("가입을 승인했습니다.");
     }
 

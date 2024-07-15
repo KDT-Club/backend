@@ -70,33 +70,37 @@ public class ClubController {
         }
 
         // 동아리 정보 불러옴
-        ClubDTO clubDTO = clubService.getClubByClubId(clubId);
-        return ResponseEntity.ok(clubDTO);
+        ClubInfoDTO clubInfoDTO = clubService.getClubByClubId(clubId);
+        return ResponseEntity.ok(clubInfoDTO);
     }
 
     // 동아리 상태 수정(POST)
     @PostAuthorize("isAuthenticated()")
     @PostMapping("/clubs/{clubId}/changeClubInfo")
     public ResponseEntity<?> changeStatus(@PathVariable("clubId") Long clubId,
-                                          @RequestParam("clubName") String clubName,
-                                          @RequestParam("clubSlogan") String clubSlogan,
-                                          @RequestParam("description") String description,
-                                          @RequestParam("clubImgUrl") String clubImgUrl) {
+                                          @RequestBody ClubInfoDTO clubInfoDTO) {
         // 현재 저장되어 있는 동아리 정보 받아옴
-        ClubDTO existingClubInfo = clubService.getClubByClubId(clubId);
+        ClubInfoDTO existingClubInfo = clubService.getClubByClubId(clubId);
 
         // 사용자가 수정한 값이 없는 경우 기존 정보 그대로 반영
-        if (clubName.isEmpty()) {
-            clubName = existingClubInfo.getClubName();
+        String clubName = existingClubInfo.getClubName();
+        if (!clubInfoDTO.getClubName().isEmpty()) {
+            clubName = clubInfoDTO.getClubName();
         }
-        if (clubSlogan.isEmpty()) {
-            clubSlogan = existingClubInfo.getClubSlogan();
+
+        String clubSlogan = existingClubInfo.getClubSlogan();
+        if (!clubInfoDTO.getClubSlogan().isEmpty()) {
+            clubSlogan = clubInfoDTO.getClubSlogan();
         }
-        if (description.isEmpty()) {
-            description = existingClubInfo.getDescription();
+
+        String description = existingClubInfo.getDescription();
+        if (!clubInfoDTO.getDescription().isEmpty()) {
+            description = clubInfoDTO.getDescription();
         }
-        if (clubImgUrl.isEmpty()) {
-            clubImgUrl = existingClubInfo.getDescription();
+
+        String clubImgUrl = existingClubInfo.getClubImgUrl();
+        if (!clubInfoDTO.getClubImgUrl().isEmpty()) {
+            clubImgUrl = clubInfoDTO.getClubImgUrl();
         }
 
         // 동아리 정보 변경

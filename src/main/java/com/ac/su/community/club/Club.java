@@ -1,5 +1,7 @@
 package com.ac.su.community.club;
 
+import com.ac.su.clubmember.ClubMember;
+import com.ac.su.joinrequest.JoinRequest;
 import com.ac.su.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,6 +44,14 @@ public class Club {
     @ManyToOne
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
+
+    // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClubMember> clubMembers = new ArrayList<>();
+
+    // 가입 요청과의 관계 설정 (cascade 옵션 추가)
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JoinRequest> joinRequests = new ArrayList<>();
 
     @Override
     public String toString() {

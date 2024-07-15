@@ -23,16 +23,4 @@ public class ClubDTO {
     private LocalDateTime createdAt;
     private String clubImgUrl;
     private String clubSlogan;
-
-    // 동아리 수정 기능에서 표시될 내용입니다
-    // (일부러 동아리 이름, 동아리 슬로건, 동아리 설명, 동아리 이미지만 표시되게 만들었어요!!)
-    public static ClubDTO toClubDTO(Club club){
-        ClubDTO clubDTO = new ClubDTO();
-        clubDTO.setClubName(club.getName());
-        clubDTO.setClubSlogan(club.getClubSlogan());
-        clubDTO.setDescription(club.getDescription());
-        clubDTO.setClubImgUrl(club.getClubImgUrl());
-
-        return clubDTO;
-    }
 }

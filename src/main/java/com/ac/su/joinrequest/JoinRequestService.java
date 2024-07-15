@@ -97,11 +97,18 @@ public class JoinRequestService {
         clubMember.setClub(club);
         clubMember.setMember(member);
         clubMember.setId(new ClubMemberId(clubId, memberId));
+        clubMember.setStatus(MemberStatus.CLUB_MEMBER);
         clubMemberRepository.save(clubMember);
     }
 
     // 가입 거절
     public void denyRequest(Long requestId) {
         joinRequestRepository.deleteById(requestId);
+    }
+
+    // 지원서를 작성한 회원 id 검색하는 메소드
+    public Long getMemberIdByRequestId(Long requestId) {
+        JoinRequest joinRequest = joinRequestRepository.findById(requestId).orElseThrow();
+        return joinRequest.getMember().getId();
     }
 }
