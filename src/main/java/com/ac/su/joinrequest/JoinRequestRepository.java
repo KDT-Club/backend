@@ -14,8 +14,5 @@ public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long> 
     List<JoinRequest> findByClubIdAndStatus(Long clubId, RequestStatus status);
     // 동아리 id로 동아리 지원서 삭제
     void deleteByClubId(Long clubId);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> c7b74dc869b00a5ecb009fe6ac25e3e001d9fed1
+
