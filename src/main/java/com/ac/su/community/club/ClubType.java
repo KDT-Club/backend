@@ -1,7 +1,7 @@
 package com.ac.su.community.club;
 
 public enum ClubType {
-    
+
     ACADEMIC, // 학술
     SPORT, // 체육
     CULTURE, // 문화
@@ -9,4 +9,3 @@ public enum ClubType {
     NEW // 신규
 
     }
-

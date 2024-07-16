@@ -41,7 +41,7 @@ public class ClubService {
                         club.getId(),
                         club.getName(),
                         club.getDescription(),
-                        club.getCategory(),
+                        club.getClubType(), //여기가 오류 발생하는 원인인듯...
                         club.getMember().getId(), // 클럽 회원의 ID
                         club.getCreatedAt(),
                         club.getClubImgUrl(),
@@ -72,7 +72,7 @@ public class ClubService {
                     club.getId(),
                     club.getName(),
                     club.getDescription(),
-                    club.getCategory(),
+                    club.getClubType(),
                     clubMember.getMember().getId(),
                     club.getCreatedAt(),
                     club.getClubImgUrl(),
@@ -98,7 +98,7 @@ public class ClubService {
         Club club = new Club();
         club.setName(request.getClubName());
         club.setDescription(request.getDescription());
-        club.setCategory(request.getCategory());
+        club.setClubType(request.getClubType());
         club.setClubImgUrl(request.getClubImgUrl());
         club.setClubSlogan(request.getClubSlogan());
 
