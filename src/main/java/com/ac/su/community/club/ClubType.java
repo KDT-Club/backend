@@ -9,3 +9,4 @@ public enum ClubType {
     NEW // 신규
 
 }
+

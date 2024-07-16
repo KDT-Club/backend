@@ -1,11 +1,6 @@
 package com.ac.su.community.post;
 
 import com.ac.su.community.board.Board;
-import lombok.Getter;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -26,7 +20,6 @@ import java.util.Optional;
 public class PostController {
     private final PostService postService;
     private final MemberRepository memberRepository;
-    private PostRepository postRepository;
 
     private Member getAuthenticatedMember(@AuthenticationPrincipal User user) {
         String studentId = user.getUsername();

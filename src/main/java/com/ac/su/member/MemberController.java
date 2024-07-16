@@ -38,6 +38,7 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+
     // 멤버 정보 수정
     @PostMapping("members/{memberId}")
     // id랑 dto 값 받아서 저장 - 부분 수정이라도 전체 값을 받아야 함.
@@ -49,6 +50,7 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+
     // 멤버 삭제
     @DeleteMapping("members/{memberId}")
     public ResponseEntity<?> deleteMember(@PathVariable Long memberId) {
@@ -60,5 +62,4 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("계정 삭제 실패!");
         }
     }
-
 }

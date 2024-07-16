@@ -2,6 +2,10 @@ package com.ac.su.community.board;
 
 import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
+
+
+import com.ac.su.community.board.BoardDTO;
+
 import com.ac.su.community.post.Post;
 import com.ac.su.community.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +20,16 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
-    private final PostRepository postRepository;
+    private final PostRepository postRepository; // post 관련 DB 입출력 함수
     private final ClubRepository clubRepository;
 
-    // 자유게시판 리스트 /board/1/posts
+    // 자유게시판 리스트 /board/{1}/posts
     @GetMapping("/board/{board_id}/posts")
     public List<BoardDTO> getAllGeneralPost(@PathVariable Long board_id) {
         // 커뮤니티 자유게시판 글 모두 가져오기
         Board board = new Board();
         board.setId(board_id);
-        var posts = postRepository.findByBoardId(board); // 수정된 부분: 메서드 이름을 findByBoard에서 findByBoardId로 변경
+        var posts = postRepository.findByBoardId(board);
 
         // Post 객체를 BoardDTO로 변환하여 반환
         return posts.stream()
@@ -65,6 +69,7 @@ public class BoardController {
                 .collect(Collectors.toList());
     }
 
+
     // 동아리 활동 게시판 리스트
     @GetMapping("/clubs/{clubId}/board/3/posts")
     public List<BoardDTO> getAllActivityPosts(@PathVariable Long clubId) {
@@ -94,6 +99,7 @@ public class BoardController {
             throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
         }
     }
+
 
     // 동아리 내부 자유게시판 리스트
     @GetMapping("/clubs/{clubId}/board/4/posts")

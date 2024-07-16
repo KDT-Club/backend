@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig { // 여기서 Spring Security 설정함
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -27,11 +27,13 @@ public class SecurityConfig {
                 .requestMatchers("/club/{clubid}/board/4/posts").hasAnyRole("CLUB_MEMBER", "CLUB_PRESIDENT") // 커뮤니티내 자유 게시판은 동아리 회원과 동아리장만 접근 허용
                 .anyRequest().permitAll() // 기타 모든 요청은 허용
         );
-        http.formLogin((formLogin) -> formLogin.loginPage("/login") // 폼 로그인 설정
+        // 폼 로그인 설정
+        http.formLogin((formLogin) -> formLogin.loginPage("/login") // 폼으로 로그인, 로그인 페이지 URL 적어주기 GET
                 .usernameParameter("studentId")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/") // 로그인 성공 시 이동할 URL
         );
+        // 로그아웃 설정
         http.logout((logout) -> logout
                 .logoutUrl("/logout") // 로그아웃 URL
                 .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 URL

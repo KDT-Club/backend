@@ -1,5 +1,7 @@
 package com.ac.su.joinrequest;
 
+import com.ac.su.clubmember.ClubMember;
+import com.ac.su.clubmember.MemberStatus;
 import com.ac.su.clubmember.RequestStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

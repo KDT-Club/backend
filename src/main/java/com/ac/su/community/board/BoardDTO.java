@@ -23,5 +23,6 @@ public class BoardDTO {
         this.createdAt = createdAt;
         this.memberId = memberId;
     }
-
 }
+
+

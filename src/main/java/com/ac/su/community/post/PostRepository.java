@@ -13,3 +13,4 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByBoardIdAndClubName(Board board, String clubName);
     List<Post> findByMemberId(Long memberId);
 }
+
