@@ -26,7 +26,7 @@ public class Attachment {
 
     @ManyToOne
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Post postId;    // 게시글 고유 번호 (수정된 부분: 필드 이름을 postId에서 post로 변경)
+    private Post postId;    // 게시글 고유 번호
 
 
 }

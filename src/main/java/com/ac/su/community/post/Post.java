@@ -61,11 +61,9 @@ public class Post {
     private Board boardId;    // 게시판 고유 번호
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // 수정된 부분: mappedBy 속성을 postId에서 post로 변경
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>(); // 초기화
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // 수정된 부분: mappedBy 속성을 postId에서 post로 변경
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments = new ArrayList<>(); // 초기화
 }
