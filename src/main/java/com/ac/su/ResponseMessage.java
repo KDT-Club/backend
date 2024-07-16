@@ -12,3 +12,4 @@ public class ResponseMessage {
         this.message = message;
     }
 }
+

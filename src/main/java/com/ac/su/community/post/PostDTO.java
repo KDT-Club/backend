@@ -1,6 +1,5 @@
 package com.ac.su.community.post;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

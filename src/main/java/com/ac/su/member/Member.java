@@ -6,7 +6,7 @@ import com.ac.su.community.club.Club;
 import com.ac.su.community.post.Post;
 import com.ac.su.joinrequest.JoinRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.*;;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,12 +42,9 @@ public class Member {
     @Column
     private String phone;
 
-    @OneToMany(mappedBy = "member")
-    private List<ClubMember> joinedClubs; // 가입된 클럽 목록
-
     @JsonIgnore
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Club club;  // 동아리장이 관리하는 동아리
+    private Club club;
 
     // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
     @JsonIgnore

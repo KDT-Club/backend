@@ -2,10 +2,6 @@ package com.ac.su.community.board;
 
 import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
-
-
-import com.ac.su.community.board.BoardDTO;
-
 import com.ac.su.community.post.Post;
 import com.ac.su.community.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
+
     private final PostRepository postRepository; // post 관련 DB 입출력 함수
     private final ClubRepository clubRepository;
 
@@ -69,7 +66,6 @@ public class BoardController {
                 .collect(Collectors.toList());
     }
 
-
     // 동아리 활동 게시판 리스트
     @GetMapping("/clubs/{clubId}/board/3/posts")
     public List<BoardDTO> getAllActivityPosts(@PathVariable Long clubId) {
@@ -99,7 +95,6 @@ public class BoardController {
             throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
         }
     }
-
 
     // 동아리 내부 자유게시판 리스트
     @GetMapping("/clubs/{clubId}/board/4/posts")

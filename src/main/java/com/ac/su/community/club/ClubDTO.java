@@ -25,4 +25,3 @@ public class ClubDTO {
     private String clubSlogan;
 }
 
-

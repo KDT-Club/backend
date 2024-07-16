@@ -32,6 +32,8 @@
 //        return "club_member_detail";
 //    }
 
+
+//
 //    // 회원 상태 수정
 //    @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
 //    public String changeStatus(@PathVariable("memberId") Long memberId,

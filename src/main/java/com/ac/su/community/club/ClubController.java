@@ -127,5 +127,3 @@ public class ClubController {
         return ResponseEntity.ok("동아리를 삭제했습니다.");
     }
 }
-
-
