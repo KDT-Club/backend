@@ -31,7 +31,7 @@
 //        model.addAttribute("clubMember", clubMemberDTO);
 //        return "club_member_detail";
 //    }
-//ㅊ
+
 //    // 회원 상태 수정
 //    @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
 //    public String changeStatus(@PathVariable("memberId") Long memberId,

@@ -17,7 +17,7 @@ public class ClubInfoDTO {
     private String clubSlogan;
 
     // 동아리 수정 기능에서 표시될 내용입니다
-    public static ClubInfoDTO toClubInfoDTO(Club club){
+    public static ClubInfoDTO toClubInfoDTO(Club club) {
         ClubInfoDTO clubInfoDTO = new ClubInfoDTO();
         clubInfoDTO.setClubName(club.getName());
         clubInfoDTO.setClubSlogan(club.getClubSlogan());
