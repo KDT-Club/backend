@@ -44,7 +44,7 @@ public class Club {
     private ClubType clubType;
 
     // 동아리 회장 참조키
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
