@@ -1,5 +1,4 @@
 package com.ac.su.community.club;
-
 public enum ClubType {
 
     ACADEMIC, // 학술
@@ -7,5 +6,5 @@ public enum ClubType {
     CULTURE, // 문화
     SERVICE, // 봉사
     NEW // 신규
+}
 
-    }

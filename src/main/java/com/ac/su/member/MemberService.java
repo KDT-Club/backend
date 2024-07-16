@@ -55,7 +55,7 @@ public class MemberService {
     }
     // 멤버 삭제
     public void deleteMember(Long memberId) {
-            if (isMemberAlreadyPresident(memberId)) {
+        if (isMemberAlreadyPresident(memberId)) {
             throw new RuntimeException("동아리 회장은 탈퇴할 수 없습니다.");//
         }
         memberRepository.deleteById(memberId);

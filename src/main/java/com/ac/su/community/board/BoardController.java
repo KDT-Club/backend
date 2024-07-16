@@ -2,7 +2,6 @@ package com.ac.su.community.board;
 
 import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
-import com.ac.su.community.board.BoardDTO;
 import com.ac.su.community.post.Post;
 import com.ac.su.community.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
+
     private final PostRepository postRepository; // post 관련 DB 입출력 함수
     private final ClubRepository clubRepository;
 
@@ -66,6 +66,20 @@ public class BoardController {
                 .collect(Collectors.toList());
     }
 
+    // 동아리 활동 게시판 리스트
+    @GetMapping("/clubs/{clubId}/board/3/posts")
+    public List<BoardDTO> getAllActivityPosts(@PathVariable Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + clubId));
+        Board board = new Board();
+        board.setId(3L);
+        List<Post> posts = postRepository.findByBoardIdAndClubName(board, club.getName());
+
+        return posts.stream()
+                .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
+                .collect(Collectors.toList());
+    }
+
     // 동아리 공지게시판 게시물 상세 & 동아리 내부 자유게시판 게시물 상세, 동아리 활동게시판 게시물 상세
     @GetMapping({"/clubs/{club_id}/board/{board_id}/posts/{post_id}", "/board/{board_id}/clubs/{club_id}/posts/{post_id}"})
     public Post getPostDetails(@PathVariable Long club_id, @PathVariable Long board_id, @PathVariable Long post_id) {
@@ -80,5 +94,19 @@ public class BoardController {
         } else {
             throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
         }
+    }
+
+    // 동아리 내부 자유게시판 리스트
+    @GetMapping("/clubs/{clubId}/board/4/posts")
+    public List<BoardDTO> getAllInternalPosts(@PathVariable Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + clubId));
+        Board board = new Board();
+        board.setId(4L);
+        List<Post> posts = postRepository.findByBoardIdAndClubName(board, club.getName());
+
+        return posts.stream()
+                .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
+                .collect(Collectors.toList());
     }
 }
