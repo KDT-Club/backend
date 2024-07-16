@@ -2,9 +2,8 @@ package com.ac.su.member;
 
 import com.ac.su.clubmember.ClubMemberRepository;
 import com.ac.su.clubmember.MemberStatus;
-import com.ac.su.community.club.Club;
-import com.ac.su.community.club.ClubDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -13,10 +12,11 @@ public class MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
-
+    private final PasswordEncoder passwordEncoder;
     private final ClubMemberRepository clubMemberRepository;
 
-    public MemberService(ClubMemberRepository clubMemberRepository) {
+    public MemberService(PasswordEncoder passwordEncoder, ClubMemberRepository clubMemberRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.clubMemberRepository = clubMemberRepository;//
     }
 
@@ -34,9 +34,15 @@ public class MemberService {
             member.setName(memberDTO.getName());
             member.setDepartment(memberDTO.getDepartment());
             member.setStudentId(memberDTO.getStudentId());
-            member.setPassword(memberDTO.getPassword());
             member.setMemberImageURL(memberDTO.getMemberImageURL());
             member.setPhone(memberDTO.getPhone());
+
+            // 비밀번호 암호화
+            if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {
+                String encryptedPassword = passwordEncoder.encode(memberDTO.getPassword());
+                member.setPassword(encryptedPassword);
+            }
+
             //DB에 저장
             return memberRepository.save(member);
         }
