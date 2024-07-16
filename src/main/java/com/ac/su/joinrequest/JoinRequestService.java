@@ -63,12 +63,12 @@ public class JoinRequestService {
 //        List<JoinRequest> joinRequestList = joinRequestRepository.findByClubIdAndStatus(clubId, RequestStatus.WAITING);
         List<JoinRequest> joinRequestList = joinRequestRepository.findByClubId(clubId);
         // 동아리 지원서가 한 개도 없을 때 빈 리스트 반환
-        if(joinRequestList.isEmpty()){
+        if (joinRequestList.isEmpty()) {
             return new ArrayList<>();
         }
         // JoinRequest -> JoinRequestDTO로 변환
         List<JoinRequestDTO> joinRequestDTOList = new ArrayList<>();
-        for (JoinRequest joinRequest : joinRequestList){
+        for (JoinRequest joinRequest : joinRequestList) {
             joinRequestDTOList.add(JoinRequestDTO.toJoinRequestDTO(joinRequest));
         }
         return joinRequestDTOList;

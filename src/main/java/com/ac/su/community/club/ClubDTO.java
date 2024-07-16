@@ -24,3 +24,4 @@ public class ClubDTO {
     private String clubImgUrl;
     private String clubSlogan;
 }
+
