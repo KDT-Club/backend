@@ -1,7 +1,7 @@
 package com.ac.su.security;
 
-import com.ac.su.member.MemberRepository;
 import com.ac.su.member.Member;
+import com.ac.su.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +17,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        int studentId = Integer.parseInt(username);
-        Member member = memberRepository.findByStudentId(studentId)
+        // studentId가 String 타입으로 변경됨
+        Member member = memberRepository.findByStudentId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid user"));
 
         return User.withDefaultPasswordEncoder()
-                .username(String.valueOf(member.getStudentId()))
+                .username(member.getStudentId())
                 .password(member.getPassword())
                 .roles("USER")
                 .build();

@@ -1,24 +1,35 @@
 package com.ac.su.community.post;
 
+import com.ac.su.comment.Comment;
 import com.ac.su.community.attachment.Attachment;
 import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.community.board.Board;
 import com.ac.su.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
-    @Column(name="post_id")
+    @Column(name = "post_id")
     private Long id;
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String content;
 
@@ -30,84 +41,31 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedAt; // 수정 날짜
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private AttachmentFlag attachmentFlag; // Enum 타입으로 변경
+
+    @Column
+    private String postType;
+
+    @Column
+    private String clubName;
+
     @ManyToOne
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;  // 회원 고유번호
 
     @ManyToOne
     @JoinColumn(name = "board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Board board;    //게시판 고유 번호
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private AttachmentFlag attachmentFlag; // Enum 타입으로 변경
+    @JsonIgnore
+    private Board boardId;    // 게시판 고유 번호
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Attachment> attachments; // 첨부파일 목록
+    // 수정된 부분: mappedBy 속성을 postId에서 post로 변경
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>(); // 초기화
 
-
-    @Column
-    private String clubName;
-
-
-
-
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
-    public AttachmentFlag getAttachmentFlag() {
-        return attachmentFlag;
-    }
-
-    public void setAttachmentFlag(AttachmentFlag attachmentFlag) {
-        this.attachmentFlag = attachmentFlag;
-    }
-
-
-    public String getClubName() {
-        return clubName;
-    }
-
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
-    }
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    // 수정된 부분: mappedBy 속성을 postId에서 post로 변경
+    private List<Attachment> attachments = new ArrayList<>(); // 초기화
 }

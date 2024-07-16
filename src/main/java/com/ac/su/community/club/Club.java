@@ -1,41 +1,82 @@
 package com.ac.su.community.club;
 
 import com.ac.su.clubmember.ClubMember;
+import com.ac.su.community.board.BoardType;
+import com.ac.su.joinrequest.JoinRequest;
 import com.ac.su.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@ToString
+@Table(name = "Club")
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
     @Column(name="club_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length=20, nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private String category;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ClubType Category;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt; // 생성 날짜
+
+    @Column
+    private String clubImgUrl;
+
+    @Column
+    private String clubSlogan;
+
+    @Enumerated(EnumType.STRING)
+    private ClubType clubType;
+
+    // 동아리 회장 참조키
     @OneToOne
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member; // 동아리장
+    private Member member;
 
-    @OneToMany(mappedBy = "club")
-    private List<ClubMember> members; // 동아리 회원들
+
+    // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ClubMember> clubMembers = new ArrayList<>();
+
+    // 가입 요청과의 관계 설정 (cascade 옵션 추가)
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<JoinRequest> joinRequests = new ArrayList<>();
 
     public String getName() {
         return name;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Club{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", clubImgUrl='" + clubImgUrl + '\'' +
+                ", clubSlogan='" + clubSlogan + '\'' +
+                ", member=" + member +
+                '}';
     }
 }

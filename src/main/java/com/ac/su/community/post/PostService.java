@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,20 +39,7 @@ public class PostService {
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid board Id: " + boardId));
-        post.setBoard(board);
-
-        if (boardId == 2 || boardId == 3) {
-            if (member.getManagedClub() == null || !member.getManagedClub().getId().equals(clubId)) {
-                throw new IllegalArgumentException("You do not have permission to create a post in this club.");
-            }
-            post.setClubName(member.getManagedClub().getName());
-        } else if (boardId == 4) {
-            boolean isMember = member.getJoinedClubs().stream().anyMatch(club -> club.getId().equals(clubId));
-            if (!isMember) {
-                throw new IllegalArgumentException("You do not have permission to create a post in this club.");
-            }
-            post.setClubName(member.getJoinedClubs().stream().filter(club -> club.getId().equals(clubId)).findFirst().map(club -> club.getClub().getName()).orElseThrow(() -> new IllegalArgumentException("Club not found")));
-        }
+        post.setBoardId(board);
 
         post.setAttachmentFlag(AttachmentFlag.valueOf(postDTO.getAttachmentFlag()));
 
@@ -73,7 +62,7 @@ public class PostService {
 
                         Attachment newAttachment = new Attachment();
                         newAttachment.setAttachmentName(uploadUrl + fileName); // URL로 저장
-                        newAttachment.setPost(savedPost);
+                        newAttachment.setPostId(savedPost);
 
                         attachmentRepository.save(newAttachment);
                     } catch (IOException e) {
@@ -83,5 +72,39 @@ public class PostService {
                 }
             }
         }
+    }
+
+    public List<Post> getPostsByMemberId(Long memberId) {
+        return postRepository.findByMemberId(memberId);
+    }
+
+    public boolean deletePost(Long postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isPresent()) {
+            postRepository.deleteById(postId);
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<Post> updatePost(Long postId, PostUpdateDto postUpdateDto) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            post.setTitle(postUpdateDto.getTitle());
+            post.setContent(postUpdateDto.getContent());
+            if (postUpdateDto.getAttachmentFlag() != null) {
+                try {
+                    post.setAttachmentFlag(AttachmentFlag.valueOf(postUpdateDto.getAttachmentFlag()));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid AttachmentFlag value: " + postUpdateDto.getAttachmentFlag());
+                }
+            } else {
+                post.setAttachmentFlag(AttachmentFlag.N); // 기본 값 설정, 필요시 다른 기본 값으로 변경
+            }
+            postRepository.save(post);
+            return Optional.of(post);
+        }
+        return Optional.empty();
     }
 }

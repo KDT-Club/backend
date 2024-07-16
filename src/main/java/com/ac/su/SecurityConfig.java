@@ -4,38 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/board/1/posts", "/board/3/club/**/posts", "/club/**/board/2/posts", "/club/**/board/4/posts").authenticated()
-                                .anyRequest().permitAll()
-                )
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/login")
-                                .permitAll()
-                )
-                .logout(logout ->
-                        logout
-                                .permitAll()
-                )
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (개발 중인 경우에만)
-                .httpBasic(Customizer.withDefaults()); // httpBasic() 대신 Customizer.withDefaults() 사용
-        return http.build();
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,8 +18,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        // InMemoryUserDetailsManager 예시, 실제로는 DB를 통해 사용자 정보를 관리
-        return new InMemoryUserDetailsManager();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf((csrf) -> csrf.disable()); // CSRF 비활성화
+        http.authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers("/board/1/posts").permitAll() // 자유 게시판은 모든 사용자 접근 허용
+                .requestMatchers("/club/{clubid}/board/2/posts").hasRole("CLUB_PRESIDENT") // 공지 게시판은 동아리장만 접근 허용
+                .requestMatchers("/board/3/club/{clubid}/posts").hasRole("CLUB_PRESIDENT") // 활동 게시판은 동아리장만 접근 허용
+                .requestMatchers("/club/{clubid}/board/4/posts").hasAnyRole("CLUB_MEMBER", "CLUB_PRESIDENT") // 커뮤니티내 자유 게시판은 동아리 회원과 동아리장만 접근 허용
+                .anyRequest().permitAll() // 기타 모든 요청은 허용
+        );
+        http.formLogin((formLogin) -> formLogin.loginPage("/login") // 폼 로그인 설정
+                .usernameParameter("studentId")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/") // 로그인 성공 시 이동할 URL
+        );
+        http.logout((logout) -> logout
+                .logoutUrl("/logout") // 로그아웃 URL
+                .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 URL
+        );
+        return http.build();
     }
 }
+
+// FilterChain : 모든 유저의 요청과 서버의 응답 사이에 자동으로 실행해주고 싶은 코드 담는 곳
