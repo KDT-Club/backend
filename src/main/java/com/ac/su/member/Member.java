@@ -43,8 +43,8 @@ public class Member {
     private String phone;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Club> clubs = new ArrayList<>();
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Club club;
 
     // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
     @JsonIgnore
