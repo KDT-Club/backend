@@ -2,10 +2,6 @@ package com.ac.su.community.board;
 
 import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
-<<<<<<< HEAD
-=======
-import com.ac.su.community.board.BoardDTO;
->>>>>>> c7b74dc869b00a5ecb009fe6ac25e3e001d9fed1
 import com.ac.su.community.post.Post;
 import com.ac.su.community.post.PostRepository;
 import lombok.RequiredArgsConstructor;
