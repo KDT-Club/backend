@@ -65,7 +65,7 @@ public class Post {
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>(); // 초기화
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     // 수정된 부분: mappedBy 속성을 postId에서 post로 변경
     private List<Attachment> attachments = new ArrayList<>(); // 초기화
 }
