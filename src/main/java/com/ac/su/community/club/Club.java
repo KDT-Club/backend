@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "Club")
 public class Club {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="club_id")
     private Long id;
 
@@ -29,10 +29,6 @@ public class Club {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private ClubType Category;
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 날짜
@@ -43,6 +39,7 @@ public class Club {
     @Column
     private String clubSlogan;
 
+    @Column
     @Enumerated(EnumType.STRING)
     private ClubType clubType;
 
@@ -50,7 +47,6 @@ public class Club {
     @OneToOne
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
-
 
     // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,11 +57,6 @@ public class Club {
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<JoinRequest> joinRequests = new ArrayList<>();
-
-    public String getName() {
-        return name;
-    }
-
 
     @Override
     public String toString() {

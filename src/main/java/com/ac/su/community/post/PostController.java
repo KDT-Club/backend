@@ -1,7 +1,9 @@
 package com.ac.su.community.post;
 
+
 import com.ac.su.community.board.Board;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
+
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
@@ -82,7 +84,7 @@ public class PostController {
         }
     }
 
-    // 회원 ID로 게시물 조회
+
     @GetMapping("/posts/{memberId}")
     public List<Post> getPostsByMemberId(@PathVariable Long memberId) {
         return postService.getPostsByMemberId(memberId);
@@ -99,7 +101,6 @@ public class PostController {
         }
     }
 
-    // 게시물 수정
     @PutMapping("/posts/{postId}")
     public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
         Optional<Post> updatedPost = postService.updatePost(postId, postUpdateDto);
@@ -114,4 +115,5 @@ public class PostController {
             return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
         }
     }
+
 }

@@ -60,5 +60,5 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("계정 삭제 실패!");
         }
     }
-
 }
+

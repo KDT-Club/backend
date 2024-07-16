@@ -110,3 +110,4 @@ public class JoinRequestRestController {
         return ResponseEntity.ok("가입을 거절했습니다.");
     }
 }
+

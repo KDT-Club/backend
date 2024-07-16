@@ -54,4 +54,6 @@ public class LoginController {
 //        System.out.println(auth.getName());
         return "mainpage";
     }
+
 }
+

@@ -51,4 +51,5 @@ public class PostDTO {
     public void setAttachmentNames(List<MultipartFile> attachmentNames) {
         this.attachmentNames = attachmentNames;
     }
+
 }

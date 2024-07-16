@@ -18,3 +18,4 @@ public class Board {
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
 }
+

@@ -78,6 +78,8 @@ public class PostService {
         return postRepository.findByMemberId(memberId);
     }
 
+
+
     public boolean deletePost(Long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
@@ -108,3 +110,4 @@ public class PostService {
         return Optional.empty();
     }
 }
+

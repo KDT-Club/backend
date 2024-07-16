@@ -4,4 +4,5 @@ public enum MemberStatus {
     MEMBER,
     CLUB_MEMBER,
     CLUB_PRESIDENT
+
 }

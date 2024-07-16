@@ -13,3 +13,4 @@ public class MemberDTO {
     private String memberImageURL;
 
 }
+

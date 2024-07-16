@@ -36,3 +36,4 @@ public class JoinRequestDTO {
         return joinRequestDTO;
     }
 }
+

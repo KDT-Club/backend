@@ -74,3 +74,4 @@ public class JoinRequestController {
         private String motivation;
     }
 }
+

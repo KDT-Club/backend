@@ -112,3 +112,4 @@ public class JoinRequestService {
         return joinRequest.getMember().getId();
     }
 }
+

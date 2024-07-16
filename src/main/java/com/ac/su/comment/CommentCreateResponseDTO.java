@@ -12,3 +12,4 @@ public class CommentCreateResponseDTO {
         this.message = message;
     }
 }
+

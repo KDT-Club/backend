@@ -11,3 +11,4 @@ public class PostUpdateDto {
     private String attachmentFlag; // EnumType.STRING 을 사용하므로 String 타입 사용
     private String attachmentName;
 }
+
