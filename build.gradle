@@ -49,7 +49,15 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0' // Springdoc OpenAPI 의존성 추가
-
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.5'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    // Spring Session JDBC
+    implementation 'org.springframework.session:spring-session-jdbc'
     // MySQL JDBC Driver
     implementation 'mysql:mysql-connector-java:8.0.33'
 

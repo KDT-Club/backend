@@ -41,9 +41,11 @@ public class ClubMemberRestController {
     @PostMapping("/{clubId}/clubMember/{memberId}/changeStatus")
     public ResponseEntity<?> changeStatus(@PathVariable("memberId") Long memberId,
                                           @PathVariable("clubId") Long clubId,
+                                          // 1) 바디에 데이터 매핑 실패
                                           @RequestBody MemberStatusDTO statusDTO,
                                           Authentication auth) {
         // 회원 상태 가져오기
+        // 2) auth 를 불러오지 못하는 경우
         CustonUser user = (CustonUser) auth.getPrincipal();
         MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
 
