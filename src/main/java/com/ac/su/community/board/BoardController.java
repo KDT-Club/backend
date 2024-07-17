@@ -67,7 +67,7 @@ public class BoardController {
     }
 
     // 동아리 활동 게시판 리스트
-    @GetMapping("/clubs/{clubId}/board/3/posts")
+    @GetMapping("/board/3/clubs/{clubId}/posts")
     public List<BoardDTO> getAllActivityPosts(@PathVariable Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + clubId));
