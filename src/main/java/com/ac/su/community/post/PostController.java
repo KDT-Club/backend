@@ -48,27 +48,10 @@ public class PostController {
         }
     }
 
+
     // 동아리 활동 게시판 글 작성 처리
     @PostMapping("/board/3/club/{clubId}/posts")
-    public ResponseEntity<ResponseMessage> createActivityPost(@PathVariable Long clubId, @RequestBody PostDTO request, @AuthenticationPrincipal User user) {
-        try {
-            Member member = getAuthenticatedMember(user);
-
-            // 권한 체크
-            if (member.getClub() == null || !member.getClub().getId().equals(clubId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("권한이 없습니다."));
-            }
-
-            postService.createPost(request, member, 3L, clubId);
-            return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
-        }
-    }
-
-    // 동아리 활동 게시판 글 작성 처리2222
-    @PostMapping("/board/3/club/{clubId}/posts2")
-    public ResponseEntity<ResponseMessage> createActivityPost2(@PathVariable("clubId") Long clubId, @RequestBody PostDTO request, Authentication auth) {
+    public ResponseEntity<ResponseMessage> createActivityPost(@PathVariable("clubId") Long clubId, @RequestBody PostDTO request, Authentication auth) {
         try {
             // 회원 상태 가져오기
             CustonUser user = (CustonUser) auth.getPrincipal();
@@ -89,19 +72,19 @@ public class PostController {
 
     // 동아리 공지사항 게시판 글 작성 처리
     @PostMapping("/club/{clubId}/board/2/posts")
-    public ResponseEntity<ResponseMessage> createNoticePost(@PathVariable("clubId") Long clubId, @RequestBody PostDTO request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ResponseMessage> createNoticePost(@PathVariable("clubId") Long clubId, @RequestBody PostDTO request, Authentication auth) {
         try {
-            Member member = getAuthenticatedMember(user);
-            System.out.println("123");
-            System.out.println("유저객ㅊㅔ임" + member.getClub());
-            System.out.println(member.getClub().getId());
+            // 회원 상태 가져오기
+            CustonUser user = (CustonUser) auth.getPrincipal();
+            MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
 
-            // 권한 체크
-            if (member.getClub() == null || !member.getClub().getId().equals(clubId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("권한이 없습니다."));
+            // 동아리 회장이 아닌 경우 접근 금지
+            if (status != MemberStatus.CLUB_PRESIDENT) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
             }
+            Member member = memberRepository.getById(user.getId());
 
-            postService.createPost(request, member, 2L, clubId);
+            postService.createPost(request, member, 3L, clubId);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
@@ -110,16 +93,15 @@ public class PostController {
 
     // 동아리 내부 자유게시판 글 작성 처리
     @PostMapping("/club/{clubId}/board/4/posts")
-    public ResponseEntity<ResponseMessage> createInternalPost(@PathVariable Long clubId, @RequestBody PostDTO request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ResponseMessage> createInternalPost(@PathVariable Long clubId, @RequestBody PostDTO request, Authentication auth) {
         try {
-            Member member = getAuthenticatedMember(user);
+            // 회원 상태 가져오기
+            CustonUser user = (CustonUser) auth.getPrincipal();
+            MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
 
-            // 권한 체크
-            if (member.getClub() == null || !member.getClub().getId().equals(clubId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("권한이 없습니다."));
-            }
+            Member member = memberRepository.getById(user.getId());
 
-            postService.createPost(request, member, 4L, clubId);
+            postService.createPost(request, member, 3L, clubId);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));

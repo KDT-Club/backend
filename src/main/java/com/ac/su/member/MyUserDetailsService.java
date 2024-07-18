@@ -1,5 +1,6 @@
 package com.ac.su.member;
 
+import com.ac.su.community.club.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MyUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final ClubRepository clubRepository;
 
     @Override
     public UserDetails loadUserByUsername(String studentId) throws UsernameNotFoundException {
