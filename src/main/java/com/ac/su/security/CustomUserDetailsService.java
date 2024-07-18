@@ -1,4 +1,4 @@
-package com.ac.su.security;
+/**package com.ac.su.security;
 
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
@@ -28,3 +28,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 }
+**/
