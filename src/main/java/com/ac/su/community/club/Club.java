@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "Club")
 public class Club {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="club_id")
     private Long id;
 
@@ -58,10 +58,6 @@ public class Club {
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<JoinRequest> joinRequests = new ArrayList<>();
-
-    public String getName() {
-        return name;
-    }
 
     @Override
     public String toString() {

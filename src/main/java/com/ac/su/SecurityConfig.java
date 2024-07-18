@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -16,15 +18,14 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable()); // CSRF 비활성화
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/login", "/board/1/posts").permitAll() // 자유 게시판과 로그인 페이지는 모든 사용자 접근 허용
-                .requestMatchers("/club/{clubId}/board/2/posts").hasRole("CLUB_PRESIDENT") // 공지 게시판은 동아리장만 접근 허용
-                .requestMatchers("/board/3/club/{clubId}/posts").hasRole("CLUB_PRESIDENT") // 활동 게시판은 동아리장만 접근 허용
-                .requestMatchers("/club/{clubId}/board/4/posts").hasAnyRole("CLUB_MEMBER", "CLUB_PRESIDENT") // 커뮤니티내 자유 게시판은 동아리 회원과 동아리장만 접근 허용
+                .requestMatchers("/board/1/posts").permitAll() // 자유 게시판은 모든 사용자 접근 허용
+                .requestMatchers("/club/{clubid}/board/2/posts").hasRole("CLUB_PRESIDENT") // 공지 게시판은 동아리장만 접근 허용
+                .requestMatchers("/board/3/club/{clubid}/posts").hasRole("CLUB_PRESIDENT") // 활동 게시판은 동아리장만 접근 허용
+                .requestMatchers("/club/{clubid}/board/4/posts").hasAnyRole("CLUB_MEMBER", "CLUB_PRESIDENT") // 커뮤니티내 자유 게시판은 동아리 회원과 동아리장만 접근 허용
                 .anyRequest().permitAll() // 기타 모든 요청은 허용
         );
         // 폼 로그인 설정
@@ -40,6 +41,19 @@ public class SecurityConfig {
         );
         return http.build();
     }
-}
 
-// FilterChain : 모든 유저의 요청과 서버의 응답 사이에 자동으로 실행해주고 싶은 코드 담는 곳
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
+
+}

@@ -60,7 +60,6 @@ public class PostController {
     }
 
     // 동아리 공지사항 게시판 글 작성 처리
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/club/{clubId}/board/2/posts")
     public ResponseEntity<ResponseMessage> createNoticePost(@PathVariable("clubId") Long clubId, @RequestBody PostDTO request, @AuthenticationPrincipal User user) {
         try {

@@ -75,4 +75,3 @@ public class ClubMemberService {
         clubMemberRepository.save(clubPresident);
     }
 }
-
