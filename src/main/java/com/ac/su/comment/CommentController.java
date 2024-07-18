@@ -33,7 +33,7 @@ public class CommentController {
         if (isUpdated) {
             return ResponseEntity.ok("{\"message\":\"성공\"}");
         } else {
-            return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
+            return ResponseEntity.status(400).body("{\"message\":\"실패\"}");
         }
     }
 }
