@@ -24,7 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable()); // CSRF 비활성화
         http.authorizeHttpRequests((authorize) -> authorize
-                // 작동이 안되서 없앴더니 권한 적용 잘 작동함
+                // 작동이 안되서 없앴더니 권한 적용 잘 작동함(게시판)
 //                .requestMatchers("/board/1/posts").permitAll() // 자유 게시판은 모든 사용자 접근 허용
 //                .requestMatchers("/club/{clubid}/board/2/posts").hasRole("CLUB_PRESIDENT") // 공지 게시판은 동아리장만 접근 허용
 //                .requestMatchers("/board/3/club/{clubid}/posts").hasRole("CLUB_PRESIDENT") // 활동 게시판은 동아리장만 접근 허용
