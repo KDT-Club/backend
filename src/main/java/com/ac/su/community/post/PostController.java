@@ -1,17 +1,18 @@
 package com.ac.su.community.post;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import com.ac.su.ResponseMessage;
 import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberService;
 import com.ac.su.clubmember.MemberStatus;
-import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.member.CustonUser;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
