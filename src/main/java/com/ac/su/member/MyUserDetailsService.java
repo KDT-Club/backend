@@ -1,5 +1,6 @@
 package com.ac.su.member;
 
+import com.ac.su.community.club.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MyUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final ClubRepository clubRepository;
 
     @Override
     public UserDetails loadUserByUsername(String studentId) throws UsernameNotFoundException {
@@ -36,6 +38,7 @@ public class MyUserDetailsService implements UserDetailsService {
 //        a.setStatus(user.getStatus()); //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
         a.setMemberImageURL(user.getMemberImageURL());
         a.setPhone(user.getPhone());
+        a.setClub(user.getClub());
 
         return a;
     }
