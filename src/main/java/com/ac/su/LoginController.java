@@ -52,7 +52,7 @@ public class LoginController {
         //feature/myclub 브랜치에 최신화한 main 브랜치 merge 해볼게
 //        System.out.println(auth.getPrincipal());
 //        System.out.println(auth.getName());
-        System.out.println("1234");
+        System.out.println("Checking...");
         return "mainpage";
     }
 }

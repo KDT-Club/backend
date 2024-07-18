@@ -62,7 +62,7 @@ public class PostController {
             if (status != MemberStatus.CLUB_PRESIDENT) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
             }
-            Member member = memberRepository.getById(user.getId());
+            Member member = memberRepository.getReferenceById(user.getId());
 
             postService.createPost(request, member, 3L, clubId);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
@@ -83,9 +83,9 @@ public class PostController {
             if (status != MemberStatus.CLUB_PRESIDENT) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
             }
-            Member member = memberRepository.getById(user.getId());
+            Member member = memberRepository.getReferenceById(user.getId());
 
-            postService.createPost(request, member, 3L, clubId);
+            postService.createPost(request, member, 2L, clubId);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
@@ -100,9 +100,9 @@ public class PostController {
             CustonUser user = (CustonUser) auth.getPrincipal();
             MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
 
-            Member member = memberRepository.getById(user.getId());
+            Member member = memberRepository.getReferenceById(user.getId());
 
-            postService.createPost(request, member, 3L, clubId);
+            postService.createPost(request, member, 4L, clubId);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
@@ -120,9 +120,9 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
         boolean isDeleted = postService.deletePost(postId);
         if (isDeleted) {
-            return ResponseEntity.ok("{\"message\":\"성공\"}");
+            return ResponseEntity.ok("{\"message\":\"게시물 삭제 성공\"}");
         } else {
-            return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
+            return ResponseEntity.status(400).body("{\"message\":\"게시물 삭제 실패\"}");
         }
     }
 
@@ -138,7 +138,7 @@ public class PostController {
                     + "\"attachment_flag\":\"" + post.getAttachmentFlag() + "\","
                     + "\"attachment_name\":\"" + postUpdateDto.getAttachmentName() + "\"}");
         } else {
-            return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
+            return ResponseEntity.status(400).body("{\"message\":\"수정 실패\"}");
         }
     }
 }
