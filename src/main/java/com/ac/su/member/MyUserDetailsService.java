@@ -36,6 +36,7 @@ public class MyUserDetailsService implements UserDetailsService {
 //        a.setStatus(user.getStatus()); //MemberStatus 컬럼 ClubMember로 옮기는 것로 수정함
         a.setMemberImageURL(user.getMemberImageURL());
         a.setPhone(user.getPhone());
+        a.setClub(user.getClub());
 
         return a;
     }

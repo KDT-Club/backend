@@ -18,6 +18,7 @@ public class CustonUser extends User {
     private String memberImageURL;
     private String name;
     private String phone;
+    private Club club;
 
 
     public CustonUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {

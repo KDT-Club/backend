@@ -2,12 +2,14 @@ package com.ac.su.community.post;
 
 import com.ac.su.ResponseMessage;
 import com.ac.su.community.attachment.AttachmentFlag;
+import com.ac.su.member.CustonUser;
 import com.ac.su.member.Member;
 import com.ac.su.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ public class PostController {
     @PostMapping("/board/1/posts")
     public ResponseEntity<ResponseMessage> createGeneralPost(@RequestBody PostDTO request, @AuthenticationPrincipal User user) {
         try {
+            System.out.println(user);
             Member member = getAuthenticatedMember(user);
             postService.createPost(request, member, 1L, null);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
@@ -49,6 +52,27 @@ public class PostController {
 
             // 권한 체크
             if (member.getClub() == null || !member.getClub().getId().equals(clubId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("권한이 없습니다."));
+            }
+
+            postService.createPost(request, member, 3L, clubId);
+            return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
+        }
+    }
+
+    // 동아리 활동 게시판 글 작성 처리2222
+    @PostMapping("/board/3/club/{clubId}/posts2")
+    public ResponseEntity<ResponseMessage> createActivityPost2(@PathVariable Long clubId, @RequestBody PostDTO request, Authentication auth) {
+        try {
+            System.out.println(auth);
+            CustonUser user = (CustonUser) auth.getPrincipal();
+            Member member = new Member();
+            member.setId(user.getId());
+            System.out.println(auth);
+            // 권한 체크
+            if (user.getClub() == null || !user.getClub().getId().equals(clubId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("권한이 없습니다."));
             }
 
