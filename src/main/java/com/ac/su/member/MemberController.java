@@ -2,6 +2,7 @@ package com.ac.su.member;
 
 import com.ac.su.ResponseMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +25,24 @@ public class MemberController {
 
     //메인페이지로 이동
     @GetMapping("/")
-    ResponseMessage test() {
-        return new ResponseMessage("성공");
+    public ResponseEntity<ResponseMessage> test() {
+        return ResponseEntity.ok(new ResponseMessage("성공"));
     }
+
+    @GetMapping("/getUserId")
+    public ResponseEntity getUserId(Authentication auth) {
+        if (auth == null || !auth.isAuthenticated()) {
+            // 인증되지 않은 경우 HTTP 401 (UNAUTHORIZED) 상태 코드와 메시지를 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("로그인 필요"));
+        }
+        else {
+            //로그인한 유저의 고유 id 번호 봔환
+            CustonUser user = (CustonUser) auth.getPrincipal();
+            String userId = String.valueOf(user.getId());
+            return ResponseEntity.ok(new ResponseMessage(userId));
+        }
+    }
+
 
     // 멤버 불러오기
     @GetMapping("members/{memberId}")
