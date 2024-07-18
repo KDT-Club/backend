@@ -16,6 +16,8 @@ public class ClubMemberDTO {
     private MemberStatus status;
     private String studentId;
     private Long memberId;
+    private String phone;
+    private String department;
 
     public static ClubMemberDTO toClubMemberDTO(ClubMember clubMember){
         ClubMemberDTO clubMemberDTO = new ClubMemberDTO();
@@ -24,6 +26,8 @@ public class ClubMemberDTO {
         clubMemberDTO.setStatus(clubMember.getStatus());
         clubMemberDTO.setStudentId(clubMember.getMember().getStudentId());
         clubMemberDTO.setMemberId(clubMember.getMember().getId());
+        clubMemberDTO.setPhone(clubMember.getMember().getPhone());
+        clubMemberDTO.setDepartment(clubMember.getMember().getDepartment());
 
         return clubMemberDTO;
     }
