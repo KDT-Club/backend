@@ -2,6 +2,7 @@ package com.ac.su.member;
 
 import com.ac.su.ResponseMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +25,25 @@ public class MemberController {
 
     //메인페이지로 이동
     @GetMapping("/")
-    ResponseMessage test() {
-        return new ResponseMessage("성공");
+    public ResponseEntity<?> test(Authentication auth) {
+        // 유효성 검사: auth가 null인지 또는 인증되지 않은 상태인지 확인
+        if (auth == null || !auth.isAuthenticated()) {
+            // 인증되지 않은 경우 HTTP 401 (UNAUTHORIZED) 상태 코드와 메시지를 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("로그인이 필요합니다."));
+        } else {
+            // 인증된 경우, 사용자 정보를 가져와 콘솔에 출력
+            CustonUser user = (CustonUser) auth.getPrincipal();
+            System.out.println("User Details:");
+            System.out.println("ID: " + user.getId()); // memberId (고유 id)
+            System.out.println("Department: " + user.getDepartment()); // department (학과)
+            System.out.println("Name: " + user.getName()); // name (학생이름)
+            System.out.println("Image URL: " + user.getMemberImageURL()); // memberImgUrl (이미지 경로)
+            System.out.println("Username: " + user.getUsername()); // studentId (학번)
+            System.out.println("Phone: " + user.getPhone()); // phone (전화번호)
+            return ResponseEntity.ok(user);
+        }
     }
+
 
     // 멤버 불러오기
     @GetMapping("members/{memberId}")
