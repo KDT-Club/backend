@@ -7,14 +7,8 @@ import com.ac.su.community.board.Board;
 import com.ac.su.community.board.BoardRepository;
 import com.ac.su.member.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,13 +19,8 @@ public class PostService {
     private final BoardRepository boardRepository;
     private final AttachmentRepository attachmentRepository;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
-    @Value("${file.upload-url}")
-    private String uploadUrl;
-
-    public void createPost(PostDTO postDTO, MultipartFile[] files, Member member, Long boardId, Long clubId) {
+    // 게시글 작성 (URL을 입력받아 처리)
+    public void createPost(PostDTO postDTO, Member member, Long boardId, Long clubId) {
         Post post = new Post();
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
@@ -41,34 +30,25 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid board Id: " + boardId));
         post.setBoardId(board);
 
-        post.setAttachmentFlag(AttachmentFlag.valueOf(postDTO.getAttachmentFlag()));
+        post.setAttachmentFlag(postDTO.getAttachment_flag());
+
+        // clubId가 null이 아닐 때만 clubName을 설정
+        if (clubId != null) {
+            post.setClubName(postDTO.getClub_name());
+        }
 
         // Post를 먼저 저장
         Post savedPost = postRepository.save(post);
 
-        // 첨부 파일이 있는 경우 Attachment 엔티티 생성 및 저장
-        if ("Y".equals(postDTO.getAttachmentFlag()) && files != null) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    try {
-                        Path uploadPath = Paths.get(uploadDir);
-                        if (!Files.exists(uploadPath)) {
-                            Files.createDirectories(uploadPath);
-                        }
+        // 첨부 파일 URL이 있는 경우 Attachment 엔티티 생성 및 저장
+        if (postDTO.getAttachment_flag() == AttachmentFlag.Y && postDTO.getAttachment_names() != null) {
+            for (String attachmentUrl : postDTO.getAttachment_names()) {
+                if (!attachmentUrl.isEmpty()) {
+                    Attachment newAttachment = new Attachment();
+                    newAttachment.setAttachmentName(attachmentUrl); // URL로 저장
+                    newAttachment.setPostId(savedPost);
 
-                        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                        Path path = uploadPath.resolve(fileName);
-                        Files.write(path, file.getBytes());
-
-                        Attachment newAttachment = new Attachment();
-                        newAttachment.setAttachmentName(uploadUrl + fileName); // URL로 저장
-                        newAttachment.setPostId(savedPost);
-
-                        attachmentRepository.save(newAttachment);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("File upload error", e);
-                    }
+                    attachmentRepository.save(newAttachment);
                 }
             }
         }

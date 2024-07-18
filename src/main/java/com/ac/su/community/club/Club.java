@@ -45,6 +45,7 @@ public class Club {
 
     // 동아리 회장 참조키
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
