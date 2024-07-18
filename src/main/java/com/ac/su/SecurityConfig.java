@@ -18,6 +18,7 @@ public class SecurityConfig { //여기서 Spring Security 설정함
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable()); // CSRF 비활성화
@@ -32,12 +33,12 @@ public class SecurityConfig { //여기서 Spring Security 설정함
         http.formLogin((formLogin) -> formLogin.loginPage("/login") // 폼으로 로그인, 로그인 페이지 URL 적어주기 GET
                 .usernameParameter("studentId")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/") // 로그인 성공 시 이동할 URL
+                .defaultSuccessUrl("https://zmffjq.store/") // HTTPS로 리디렉션 설정
         );
         // 로그아웃 설정
         http.logout((logout) -> logout
-                .logoutUrl("/logout") // 로그아웃 URL
-                .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 URL
+                .logoutUrl("https://zmffjq.store/logout") // 로그아웃 URL
+                .logoutSuccessUrl("https://zmffjq.store/") // 로그아웃 성공 시 이동할 URL
         );
         return http.build();
     }
@@ -48,7 +49,14 @@ public class SecurityConfig { //여기서 Spring Security 설정함
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins(
+                                "http://localhost:3000",
+                                "https://plzget.github.io",
+                                "https://zmffjq.store",
+                                "https://www.zmffjq.store",
+                                "http://zmffjq.store",
+                                "http://www.zmffjq.store"
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
