@@ -1,6 +1,9 @@
 package com.ac.su.community.post;
 
 import com.ac.su.ResponseMessage;
+import com.ac.su.clubmember.ClubMemberId;
+import com.ac.su.clubmember.ClubMemberService;
+import com.ac.su.clubmember.MemberStatus;
 import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.member.CustonUser;
 import com.ac.su.member.Member;
@@ -23,6 +26,7 @@ public class PostController {
 
     private final PostService postService;
     private final MemberRepository memberRepository;
+    private final ClubMemberService clubMemberService;
 
     // 현재 로그인한 사용자를 가져오는 메서드
     private Member getAuthenticatedMember(@AuthenticationPrincipal User user) {
@@ -64,17 +68,17 @@ public class PostController {
 
     // 동아리 활동 게시판 글 작성 처리2222
     @PostMapping("/board/3/club/{clubId}/posts2")
-    public ResponseEntity<ResponseMessage> createActivityPost2(@PathVariable Long clubId, @RequestBody PostDTO request, Authentication auth) {
+    public ResponseEntity<ResponseMessage> createActivityPost2(@PathVariable("clubId") Long clubId, @RequestBody PostDTO request, Authentication auth) {
         try {
-            System.out.println(auth);
+            // 회원 상태 가져오기
             CustonUser user = (CustonUser) auth.getPrincipal();
-            Member member = new Member();
-            member.setId(user.getId());
-            System.out.println(auth);
-            // 권한 체크
-            if (user.getClub() == null || !user.getClub().getId().equals(clubId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("권한이 없습니다."));
+            MemberStatus status = clubMemberService.getMemberStatus(new ClubMemberId(user.getId(), clubId));
+
+            // 동아리 회장이 아닌 경우 접근 금지
+            if (status != MemberStatus.CLUB_PRESIDENT) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessage("동아리 회장만 접근 가능합니다"));
             }
+            Member member = memberRepository.getById(user.getId());
 
             postService.createPost(request, member, 3L, clubId);
             return ResponseEntity.ok(new ResponseMessage("게시글 작성 성공!"));
