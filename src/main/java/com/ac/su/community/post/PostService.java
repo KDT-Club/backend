@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -16,7 +15,7 @@ public class PostService {
   public List<Post> getPostsByMemberId(Long memberId) {
 
       return postRepository.findByMemberId(memberId);
-  }
+    }
 
     public boolean deletePost(Long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
@@ -27,25 +26,26 @@ public class PostService {
         return false;
     }
 
-    public Optional<Post> updatePost(Long postId, PostUpdateDto postUpdateDto) {
+    public PostResponseDto updatePost(Long postId, PostUpdateDto postUpdateDto) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             post.setTitle(postUpdateDto.getTitle());
             post.setContent(postUpdateDto.getContent());
-            if (postUpdateDto.getAttachmentFlag() != null) {
+            if (postUpdateDto.getAttachment_flag() != null && !postUpdateDto.getAttachment_flag().isEmpty()) {
+                System.out.println("Received attachmentFlag: " + postUpdateDto.getAttachment_flag()); // 디버깅 메시지
                 try {
-                    post.setAttachmentFlag(AttachmentFlag.valueOf(postUpdateDto.getAttachmentFlag()));
+                    post.setAttachmentFlag(AttachmentFlag.valueOf(postUpdateDto.getAttachment_flag()));
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("Invalid AttachmentFlag value: " + postUpdateDto.getAttachmentFlag());
-                }
-            } else {
-                post.setAttachmentFlag(AttachmentFlag.N); // 기본 값 설정, 필요시 다른 기본 값으로 변경
+                    return new PostResponseDto("에러남: Invalid AttachmentFlag value");
+
+            }
             }
             postRepository.save(post);
-            return Optional.of(post);
+            return new PostResponseDto("성공");
         }
-        return Optional.empty();
+        return new PostResponseDto("에러남: Post not found");
     }
+
 }
 

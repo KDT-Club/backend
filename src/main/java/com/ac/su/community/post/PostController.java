@@ -1,20 +1,13 @@
 package com.ac.su.community.post;
 
 
-import com.ac.su.community.board.Board;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 public class PostController {
@@ -41,18 +34,10 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
-        Optional<Post> updatedPost = postService.updatePost(postId, postUpdateDto);
-        if (updatedPost.isPresent()) {
-            Post post = updatedPost.get();
-            return ResponseEntity.ok("{\"postId\":\"" + post.getId() + "\","
-                    + "\"title\":\"" + post.getTitle() + "\","
-                    + "\"content\":\"" + post.getContent() + "\","
-                    + "\"attachment_flag\":\"" + post.getAttachmentFlag() + "\","
-                    + "\"attachment_name\":\"" + postUpdateDto.getAttachmentName() + "\"}");
-        } else {
-            return ResponseEntity.status(400).body("{\"message\":\"에러남\"}");
-        }
+    public PostResponseDto updatePost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
+        System.out.println("attachmentFlag: " + postUpdateDto.getAttachment_flag()); // 디버깅 메시지
+        postUpdateDto.setPostId(postId); // PathVariable로 받은 postId를 PostUpdateDto에 설정
+        return postService.updatePost(postId, postUpdateDto);
     }
 
 }
