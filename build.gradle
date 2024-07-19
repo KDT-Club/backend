@@ -49,7 +49,7 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0' // Springdoc OpenAPI 의존성 추가
-
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1' //AWS S3 라이브러리 셋팅
     // MySQL JDBC Driver
     implementation 'mysql:mysql-connector-java:8.0.33'
 
