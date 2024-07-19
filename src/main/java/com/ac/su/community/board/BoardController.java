@@ -81,8 +81,8 @@ public class BoardController {
     }
 
     // 동아리 공지게시판 게시물 상세 & 동아리 내부 자유게시판 게시물 상세, 동아리 활동게시판 게시물 상세
-    @GetMapping({"/clubs/{club_id}/board/{board_id}/posts/{post_id}", "/board/{board_id}/clubs/{club_id}/posts/{post_id}"})
-    public Post getPostDetails(@PathVariable Long club_id, @PathVariable Long board_id, @PathVariable Long post_id) {
+    @GetMapping("/clubs/{club_id}/board/{board_id}/posts/{post_id}")
+    public Post getClubBoardPostDetails(@PathVariable Long club_id, @PathVariable Long board_id, @PathVariable Long post_id) {
         // 주어진 club_id로 클럽 정보 가져오기
         Club club = clubRepository.findById(club_id)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + club_id));
@@ -108,5 +108,15 @@ public class BoardController {
         return posts.stream()
                 .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/postdetail/{postId}")
+    public Post getPostById(@PathVariable Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isPresent()) {
+            return post.get();
+        } else {
+            throw new IllegalArgumentException("Post not found with id: " + postId);
+        }
     }
 }
