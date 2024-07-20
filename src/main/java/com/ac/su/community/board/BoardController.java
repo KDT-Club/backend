@@ -1,5 +1,7 @@
 package com.ac.su.community.board;
 
+import com.ac.su.community.attachment.Attachment;
+import com.ac.su.community.attachment.AttachmentRepository;
 import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
 import com.ac.su.community.post.Post;
@@ -17,56 +19,62 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final PostRepository postRepository; // post 관련 DB 입출력 함수
+    private final PostRepository postRepository;
     private final ClubRepository clubRepository;
+    private final AttachmentRepository attachmentRepository;
 
-    // 자유게시판 리스트 /board/{1}/posts
     @GetMapping("/board/{board_id}/posts")
     public List<BoardDTO> getAllGeneralPost(@PathVariable Long board_id) {
-        // 커뮤니티 자유게시판 글 모두 가져오기
         Board board = new Board();
         board.setId(board_id);
         var posts = postRepository.findByBoardId(board);
 
-        // Post 객체를 BoardDTO로 변환하여 반환
         return posts.stream()
-                .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
+                .map(post -> {
+                    List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                            .stream()
+                            .map(Attachment::getAttachmentName)
+                            .collect(Collectors.toList());
+                    return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
+                })
                 .collect(Collectors.toList());
     }
 
-    // 커뮤니티 자유게시판 게시물 상세
     @GetMapping("/board/{board_id}/posts/{post_id}")
-    public Post getPostDetails(@PathVariable Long board_id, @PathVariable Long post_id) {
-        // 주어진 board_id와 post_id에 해당하는 post 검색
-        Optional<Post> post = postRepository.findById(post_id);
-        if (post.isPresent() && post.get().getBoardId().getId().equals(board_id)) {
-            return post.get();
+    public BoardDTO getPostDetails(@PathVariable Long board_id, @PathVariable Long post_id) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        if (postOptional.isPresent() && postOptional.get().getBoardId().getId().equals(board_id)) {
+            Post post = postOptional.get();
+            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                    .stream()
+                    .map(Attachment::getAttachmentName)
+                    .collect(Collectors.toList());
+            return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
         } else {
             throw new IllegalArgumentException("Post not found with id: " + post_id + " and board_id: " + board_id);
         }
     }
 
-    // 동아리 공지 게시판 리스트
     @GetMapping("/clubs/{clubId}/board/2/posts")
     public List<BoardDTO> getAllNoticePosts(@PathVariable Long clubId) {
-        // 주어진 클럽 ID로 클럽 정보 가져오기
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + clubId));
 
-        // boardId가 2인 Board 객체 생성
         Board board = new Board();
         board.setId(2L);
-
-        // 주어진 board와 clubName에 해당하는 post 검색
         var posts = postRepository.findByBoardIdAndClubName(board, club.getName());
 
-        // Post 객체를 BoardDTO로 변환하여 반환
         return posts.stream()
-                .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
+                .map(post -> {
+                    List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                            .stream()
+                            .map(Attachment::getAttachmentName)
+                            .collect(Collectors.toList());
+                    return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
+                })
                 .collect(Collectors.toList());
     }
 
-    // 동아리 활동 게시판 리스트
     @GetMapping("/board/3/clubs/{clubId}/posts")
     public List<BoardDTO> getAllActivityPosts(@PathVariable Long clubId) {
         Club club = clubRepository.findById(clubId)
@@ -76,27 +84,34 @@ public class BoardController {
         List<Post> posts = postRepository.findByBoardIdAndClubName(board, club.getName());
 
         return posts.stream()
-                .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
+                .map(post -> {
+                    List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                            .stream()
+                            .map(Attachment::getAttachmentName)
+                            .collect(Collectors.toList());
+                    return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
+                })
                 .collect(Collectors.toList());
     }
 
-    // 동아리 공지게시판 게시물 상세 & 동아리 내부 자유게시판 게시물 상세, 동아리 활동게시판 게시물 상세
     @GetMapping("/clubs/{club_id}/board/{board_id}/posts/{post_id}")
-    public Post getClubBoardPostDetails(@PathVariable Long club_id, @PathVariable Long board_id, @PathVariable Long post_id) {
-        // 주어진 club_id로 클럽 정보 가져오기
+    public BoardDTO getClubBoardPostDetails(@PathVariable Long club_id, @PathVariable Long board_id, @PathVariable Long post_id) {
         Club club = clubRepository.findById(club_id)
                 .orElseThrow(() -> new IllegalArgumentException("Club not found with id: " + club_id));
 
-        // 주어진 post_id로 post 검색
-        Optional<Post> post = postRepository.findById(post_id);
-        if (post.isPresent() && post.get().getBoardId().getId().equals(board_id) && post.get().getClubName().equals(club.getName())) {
-            return post.get();
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        if (postOptional.isPresent() && postOptional.get().getBoardId().getId().equals(board_id) && postOptional.get().getClubName().equals(club.getName())) {
+            Post post = postOptional.get();
+            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                    .stream()
+                    .map(Attachment::getAttachmentName)
+                    .collect(Collectors.toList());
+            return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
         } else {
             throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
         }
     }
 
-    // 동아리 내부 자유게시판 리스트
     @GetMapping("/clubs/{clubId}/board/4/posts")
     public List<BoardDTO> getAllInternalPosts(@PathVariable Long clubId) {
         Club club = clubRepository.findById(clubId)
@@ -106,15 +121,26 @@ public class BoardController {
         List<Post> posts = postRepository.findByBoardIdAndClubName(board, club.getName());
 
         return posts.stream()
-                .map(post -> new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId()))
+                .map(post -> {
+                    List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                            .stream()
+                            .map(Attachment::getAttachmentName)
+                            .collect(Collectors.toList());
+                    return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
+                })
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/postdetail/{postId}")
-    public Post getPostById(@PathVariable Long postId) {
-        Optional<Post> post = postRepository.findById(postId);
-        if (post.isPresent()) {
-            return post.get();
+    public BoardDTO getPostById(@PathVariable Long postId) {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+                    .stream()
+                    .map(Attachment::getAttachmentName)
+                    .collect(Collectors.toList());
+            return new BoardDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getMember().getId(), attachmentNames);
         } else {
             throw new IllegalArgumentException("Post not found with id: " + postId);
         }
