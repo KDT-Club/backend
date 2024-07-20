@@ -34,10 +34,10 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public PostResponseDto updatePost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
-        System.out.println("attachmentFlag: " + postUpdateDto.getAttachment_flag()); // 디버깅 메시지
-        postUpdateDto.setPostId(postId); // PathVariable로 받은 postId를 PostUpdateDto에 설정
-        return postService.updatePost(postId, postUpdateDto);
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId,
+                                      @RequestBody PostUpdateDto postUpdateDto) {
+        PostResponseDto response = postService.updatePost(postId, postUpdateDto);
+        return ResponseEntity.ok(response);
     }
 
 }

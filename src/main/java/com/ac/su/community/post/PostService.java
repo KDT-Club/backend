@@ -33,7 +33,6 @@ public class PostService {
             post.setTitle(postUpdateDto.getTitle());
             post.setContent(postUpdateDto.getContent());
             if (postUpdateDto.getAttachment_flag() != null && !postUpdateDto.getAttachment_flag().isEmpty()) {
-                System.out.println("Received attachmentFlag: " + postUpdateDto.getAttachment_flag()); // 디버깅 메시지
                 try {
                     post.setAttachmentFlag(AttachmentFlag.valueOf(postUpdateDto.getAttachment_flag()));
                 } catch (IllegalArgumentException e) {
