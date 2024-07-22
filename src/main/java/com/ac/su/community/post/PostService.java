@@ -1,8 +1,13 @@
 package com.ac.su.community.post;
 
+import com.ac.su.community.attachment.Attachment;
+import com.ac.su.community.attachment.AttachmentDTO;
 import com.ac.su.community.attachment.AttachmentFlag;
+import com.ac.su.community.attachment.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +16,8 @@ public class PostService {
 
   @Autowired
   private PostRepository postRepository;
+  @Autowired
+  private AttachmentService attachmentService;
 
   public List<Post> getPostsByMemberId(Long memberId) {
 
@@ -41,6 +48,22 @@ public class PostService {
             }
             }
             postRepository.save(post);
+            // attachment 코드 추가
+            if (postUpdateDto.getAttachment_flag() != null && !postUpdateDto.getAttachment_flag().isEmpty() && !postUpdateDto.getAttachment_flag().equals("N")) {
+                List<String> attachmentNames;
+                if (postUpdateDto.getAttachment_name() != null && !postUpdateDto.getAttachment_name().isEmpty()) {
+                    // 단일 문자열을 리스트로 변환
+                    attachmentNames = Collections.singletonList(postUpdateDto.getAttachment_name());
+                } else {
+                    attachmentNames = Collections.emptyList();
+                }
+                if (!attachmentNames.isEmpty()) {
+                    for (String attachmentName : attachmentNames) {
+                        AttachmentDTO attachmentDTO = new AttachmentDTO(null, attachmentName, post.getId());
+                        attachmentService.saveAttachment(attachmentDTO);
+                    }
+                }
+            }
             return new PostResponseDto("성공");
         }
         return new PostResponseDto("에러남: Post not found");

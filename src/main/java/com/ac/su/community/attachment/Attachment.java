@@ -24,4 +24,12 @@ public class Attachment {
     @ManyToOne
     @JoinColumn(name="post_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Post postId; // 게시글 고유 번호
+
+
+    public Post getPost() {
+        return this.postId;
+    }
+    public void setPost(Post post) {
+        this.postId = post;
+    }
 }
