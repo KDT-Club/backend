@@ -21,9 +21,9 @@ public class AttachmentService {
         if (optionalPost.isPresent()) {
             Attachment attachment = new Attachment();
             attachment.setAttachmentName(attachmentDTO.getAttachmentName());
-            attachment.setPost(optionalPost.get());
+            attachment.setPostId(optionalPost.get());
             Attachment savedAttachment = (Attachment) attachmentRepository.save(attachment);
-            return new AttachmentDTO(savedAttachment.getId(), savedAttachment.getAttachmentName(), savedAttachment.getPost().getId());
+            return new AttachmentDTO(savedAttachment.getId(), savedAttachment.getAttachmentName(), savedAttachment.getPostId().getId());
         }
         throw new IllegalArgumentException("Invalid Post ID");
     }
