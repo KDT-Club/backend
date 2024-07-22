@@ -1,14 +1,17 @@
 package com.ac.su.community.post;
 
 import com.ac.su.community.attachment.Attachment;
+import com.ac.su.community.attachment.AttachmentDTO;
 import com.ac.su.community.attachment.AttachmentFlag;
+import com.ac.su.community.attachment.AttachmentService;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import com.ac.su.community.attachment.AttachmentRepository;
 import com.ac.su.community.board.Board;
 import com.ac.su.community.board.BoardRepository;
 import com.ac.su.member.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
     private final AttachmentRepository attachmentRepository;
+    private final AttachmentService attachmentService;
 
     // 게시글 작성 (URL을 입력받아 처리)
     public void createPost(PostDTO postDTO, Member member, Long boardId, Long clubId) {
@@ -25,7 +29,6 @@ public class PostService {
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
         post.setMember(member);
-
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid board Id: " + boardId));
         post.setBoardId(board);
@@ -67,24 +70,40 @@ public class PostService {
         return false;
     }
 
-    public Optional<Post> updatePost(Long postId, PostUpdateDto postUpdateDto) {
+    public PostResponseDto updatePost(Long postId, PostUpdateDto postUpdateDto) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             post.setTitle(postUpdateDto.getTitle());
             post.setContent(postUpdateDto.getContent());
-            if (postUpdateDto.getAttachmentFlag() != null) {
+            if (postUpdateDto.getAttachment_flag() != null && !postUpdateDto.getAttachment_flag().isEmpty()) {
                 try {
-                    post.setAttachmentFlag(AttachmentFlag.valueOf(postUpdateDto.getAttachmentFlag()));
+                    post.setAttachmentFlag(AttachmentFlag.valueOf(postUpdateDto.getAttachment_flag()));
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("Invalid AttachmentFlag value: " + postUpdateDto.getAttachmentFlag());
-                }
-            } else {
-                post.setAttachmentFlag(AttachmentFlag.N); // 기본 값 설정, 필요시 다른 기본 값으로 변경
+                    return new PostResponseDto("에러남: Invalid AttachmentFlag value");
+
+            }
             }
             postRepository.save(post);
-            return Optional.of(post);
+            // attachment 코드 추가
+            if (postUpdateDto.getAttachment_flag() != null && !postUpdateDto.getAttachment_flag().isEmpty() && !postUpdateDto.getAttachment_flag().equals("N")) {
+                List<String> attachmentNames;
+                if (postUpdateDto.getAttachment_name() != null && !postUpdateDto.getAttachment_name().isEmpty()) {
+                    // 단일 문자열을 리스트로 변환
+                    attachmentNames = Collections.singletonList(postUpdateDto.getAttachment_name());
+                } else {
+                    attachmentNames = Collections.emptyList();
+                }
+                if (!attachmentNames.isEmpty()) {
+                    for (String attachmentName : attachmentNames) {
+                        AttachmentDTO attachmentDTO = new AttachmentDTO(null, attachmentName, post.getId());
+                        attachmentService.saveAttachment(attachmentDTO);
+                    }
+                }
+            }
+            return new PostResponseDto("성공");
         }
-        return Optional.empty();
+        return new PostResponseDto("에러남: Post not found");
     }
+
 }

@@ -1,5 +1,6 @@
 package com.ac.su.community.post;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -128,17 +128,10 @@ public class PostController {
 
     // 게시물 수정
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostUpdateDto postUpdateDto) {
-        Optional<Post> updatedPost = postService.updatePost(postId, postUpdateDto);
-        if (updatedPost.isPresent()) {
-            Post post = updatedPost.get();
-            return ResponseEntity.ok("{\"postId\":\"" + post.getId() + "\","
-                    + "\"title\":\"" + post.getTitle() + "\","
-                    + "\"content\":\"" + post.getContent() + "\","
-                    + "\"attachment_flag\":\"" + post.getAttachmentFlag() + "\","
-                    + "\"attachment_name\":\"" + postUpdateDto.getAttachmentName() + "\"}");
-        } else {
-            return ResponseEntity.status(400).body("{\"message\":\"수정 실패\"}");
-        }
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId,
+                                      @RequestBody PostUpdateDto postUpdateDto) {
+        PostResponseDto response = postService.updatePost(postId, postUpdateDto);
+        return ResponseEntity.ok(response);
+
     }
 }
