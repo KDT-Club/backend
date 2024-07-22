@@ -4,24 +4,61 @@ import com.ac.su.community.attachment.Attachment;
 import com.ac.su.community.attachment.AttachmentDTO;
 import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.community.attachment.AttachmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import com.ac.su.community.attachment.AttachmentRepository;
+import com.ac.su.community.board.Board;
+import com.ac.su.community.board.BoardRepository;
+import com.ac.su.member.Member;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
+    private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final AttachmentService attachmentService;
 
-  @Autowired
-  private PostRepository postRepository;
-  @Autowired
-  private AttachmentService attachmentService;
+    // 게시글 작성 (URL을 입력받아 처리)
+    public void createPost(PostDTO postDTO, Member member, Long boardId, Long clubId) {
+        Post post = new Post();
+        post.setTitle(postDTO.getTitle());
+        post.setContent(postDTO.getContent());
+        post.setMember(member);
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid board Id: " + boardId));
+        post.setBoardId(board);
 
-  public List<Post> getPostsByMemberId(Long memberId) {
+        post.setAttachmentFlag(postDTO.getAttachment_flag());
 
-      return postRepository.findByMemberId(memberId);
+        // clubId가 null이 아닐 때만 clubName을 설정
+        if (clubId != null) {
+            post.setClubName(postDTO.getClub_name());
+        }
+
+        // Post를 먼저 저장
+        Post savedPost = postRepository.save(post);
+
+        // 첨부 파일 URL이 있는 경우 Attachment 엔티티 생성 및 저장
+        if (postDTO.getAttachment_flag() == AttachmentFlag.Y && postDTO.getAttachment_names() != null) {
+            for (String attachmentUrl : postDTO.getAttachment_names()) {
+                if (!attachmentUrl.isEmpty()) {
+                    Attachment newAttachment = new Attachment();
+                    newAttachment.setAttachmentName(attachmentUrl); // URL로 저장
+                    newAttachment.setPostId(savedPost);
+
+                    attachmentRepository.save(newAttachment);
+                }
+            }
+        }
+    }
+
+    public List<Post> getPostsByMemberId(Long memberId) {
+        return postRepository.findByMemberId(memberId);
     }
 
     public boolean deletePost(Long postId) {
@@ -70,4 +107,3 @@ public class PostService {
     }
 
 }
-

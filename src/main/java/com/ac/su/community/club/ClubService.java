@@ -12,10 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +39,7 @@ public class ClubService {
                         club.getId(),
                         club.getName(),
                         club.getDescription(),
-                        club.getCategory(),
+                        club.getClubType(), //여기가 오류 발생하는 원인인듯...
                         club.getMember().getId(), // 클럽 회원의 ID
                         club.getCreatedAt(),
                         club.getClubImgUrl(),
@@ -59,37 +57,52 @@ public class ClubService {
      */
     public ResponseEntity<?> getClubsByMemberId(Long memberId) {
         // 특정 memberId로 클럽 멤버 데이터를 조회
-        Optional<ClubMember> clubMemberOptional = clubMemberRepository.findByMemberId(memberId);
-        if (clubMemberOptional.isEmpty()) { // 클럽 멤버 데이터가 없으면
+        List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
+
+        if (clubMembers.isEmpty()) { // 클럽 멤버 데이터가 없으면
             Map<String, String> response = new HashMap<>();
             response.put("message", "가입한 동아리 없음"); // 가입한 동아리가 없음을 알리는 메시지를 반환
             return ResponseEntity.ok(response);
         } else { // 클럽 멤버 데이터가 있으면
-            ClubMember clubMember = clubMemberOptional.get(); // 클럽 멤버 데이터 가져오기
-            Club club = clubMember.getClub(); // 클럽 데이터 가져오기
-            // 클럽 데이터를 ClubDTO로 변환
-            ClubDTO responseDTO = new ClubDTO(
-                    club.getId(),
-                    club.getName(),
-                    club.getDescription(),
-                    club.getCategory(),
-                    clubMember.getMember().getId(),
-                    club.getCreatedAt(),
-                    club.getClubImgUrl(),
-                    club.getClubSlogan()
-            );
-            return ResponseEntity.ok(responseDTO); // 변환된 DTO를 응답으로 반환
+            List<ClubDTO> responseDTOList = new ArrayList<>();
+
+            for (ClubMember clubMember : clubMembers) {
+                Club club = clubMember.getClub(); // 클럽 데이터 가져오기
+                // 클럽 데이터를 ClubDTO로 변환
+                ClubDTO responseDTO = new ClubDTO(
+                        club.getId(),
+                        club.getName(),
+                        club.getDescription(),
+                        club.getClubType(),
+                        clubMember.getMember().getId(),
+                        club.getCreatedAt(),
+                        club.getClubImgUrl(),
+                        club.getClubSlogan()
+                );
+                responseDTOList.add(responseDTO);
+            }
+
+            return ResponseEntity.ok(responseDTOList); // 변환된 DTO 리스트를 응답으로 반환
         }
+    }
+
+
+    // 클럽 회장인지 확인
+    private boolean isMemberAlreadyPresident(Long memberId) {
+        return clubMemberRepository.existsByMemberIdAndStatus(memberId, MemberStatus.CLUB_PRESIDENT);
 
     }
     // 클럽 생성
     public Club createClub(ClubDTO request,Long memberId) {
+        if (isMemberAlreadyPresident(memberId)) {
+            throw new RuntimeException("이 멤버는 이미 회장입니다.");
+        }
 
         // 클럽 생성 요청을 받아서 클럽 객체를 생성
         Club club = new Club();
         club.setName(request.getClubName());
         club.setDescription(request.getDescription());
-        club.setCategory(request.getCategory());
+        club.setClubType(request.getClubType());
         club.setClubImgUrl(request.getClubImgUrl());
         club.setClubSlogan(request.getClubSlogan());
 

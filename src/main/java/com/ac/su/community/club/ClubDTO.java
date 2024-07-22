@@ -17,10 +17,11 @@ public class ClubDTO {
     private Long clubId;
     private String clubName;
     private String description;
-    private String category;
+    private ClubType clubType;
     private Long member;
     @CreationTimestamp
     private LocalDateTime createdAt;
     private String clubImgUrl;
     private String clubSlogan;
 }
+

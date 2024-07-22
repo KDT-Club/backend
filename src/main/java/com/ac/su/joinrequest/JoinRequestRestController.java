@@ -29,7 +29,7 @@ public class JoinRequestRestController {
     // 동아리 id에 따른 동아리 지원서 리스트 출력
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{clubId}/joinRequest")
-    public ResponseEntity<?>  joinRequestList(
+    public ResponseEntity<?> joinRequestList(
             @PathVariable("clubId") Long clubId,
             Authentication auth) {
         // 회원 상태 가져오기

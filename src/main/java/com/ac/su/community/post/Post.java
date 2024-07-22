@@ -4,6 +4,7 @@ import com.ac.su.comment.Comment;
 import com.ac.su.community.attachment.AttachmentFlag;
 import com.ac.su.community.board.Board;
 import com.ac.su.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,8 +47,10 @@ public class Post {
     private Member member; // 회원 고유번호
     @ManyToOne
     @JoinColumn(name="board_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnore
     private Board boardId;  //게시판 고유 번호
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>(); // 초기화
-    }
+}

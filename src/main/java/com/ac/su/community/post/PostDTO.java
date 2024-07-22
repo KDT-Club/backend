@@ -1,14 +1,17 @@
 package com.ac.su.community.post;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-@AllArgsConstructor
-@Data
+import com.ac.su.community.attachment.AttachmentFlag;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
 public class PostDTO {
-    private Long id;
     private String title;
     private String content;
-    private String attachmentFlag;
-    private String attachmentName;
-
+    private AttachmentFlag attachment_flag;
+    private List<String> attachment_names;
+    private String club_name;
 }

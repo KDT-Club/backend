@@ -8,10 +8,11 @@ import java.util.Optional;
 
 @Repository
 public interface ClubMemberRepository extends JpaRepository<ClubMember, ClubMemberId> {
-    Optional<ClubMember> findByMemberId(Long memberId);
-//findByMember(Long memberId);
+    List<ClubMember> findByMemberId(Long memberId);
+
     //     findByMember(Long memberId);
     List<ClubMember> findByClubId(Long clubId);
+
     boolean existsById(ClubMemberId clubMemberId);
 
     // 특정 등급의 동아리 회원을 검색하는 메소드
@@ -19,4 +20,7 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, ClubMemb
 
     // 동아리 id로 동아리 회원 삭제하는 메소드
     void deleteByClubId(Long clubId);
+
+    boolean existsByMemberIdAndStatus(Long memberId, MemberStatus status);
 }
+

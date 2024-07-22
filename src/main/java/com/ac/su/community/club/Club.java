@@ -1,8 +1,10 @@
 package com.ac.su.community.club;
 
 import com.ac.su.clubmember.ClubMember;
+import com.ac.su.community.board.BoardType;
 import com.ac.su.joinrequest.JoinRequest;
 import com.ac.su.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +30,6 @@ public class Club {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(length=20, nullable = false)
-    private String category;
-
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 날짜
 
@@ -40,17 +39,24 @@ public class Club {
     @Column
     private String clubSlogan;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ClubType clubType;
+
     // 동아리 회장 참조키
-    @ManyToOne
+    @OneToOne
+    @JsonIgnore
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     // 클럽 멤버와의 관계 설정 (cascade 옵션 추가)
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ClubMember> clubMembers = new ArrayList<>();
 
     // 가입 요청과의 관계 설정 (cascade 옵션 추가)
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<JoinRequest> joinRequests = new ArrayList<>();
 
     @Override
@@ -59,7 +65,6 @@ public class Club {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
                 ", createdAt=" + createdAt +
                 ", clubImgUrl='" + clubImgUrl + '\'' +
                 ", clubSlogan='" + clubSlogan + '\'' +
