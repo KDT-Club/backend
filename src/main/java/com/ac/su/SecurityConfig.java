@@ -40,7 +40,7 @@ public class SecurityConfig {
         );
         // 로그아웃 설정
         http.logout((logout) -> logout
-                .logoutUrl("https://zmffjq.store/logout") // 로그아웃 URL
+                .logoutUrl("/logout") // 로그아웃 URL
                 .logoutSuccessUrl("https://zmffjq.store/") // 로그아웃 성공 시 이동할 URL
         );
         return http.build();
