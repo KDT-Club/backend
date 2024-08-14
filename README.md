@@ -4,3 +4,4 @@ asd
 asd
 ad
 asdasdasd
+asdfsaf자동배포
