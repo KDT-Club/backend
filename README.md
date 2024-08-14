@@ -4,5 +4,5 @@ asd
 asd
 ad
 asdasdasd
-asdfsaf자동배포
+asdfsaf자동배포s
 asdsda
