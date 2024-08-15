@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-incremnet
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto-increment
     @Column(name="board_id")
     private Long id;
     @Enumerated(EnumType.STRING)
