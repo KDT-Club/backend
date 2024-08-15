@@ -20,7 +20,7 @@ public class Comment {
     @Column(name="comment_id")
     private Long id;
     @Column
-    private String content; //댓글 내용
+    private String content; //댓글 내용dd
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt; // 생성 날짜
